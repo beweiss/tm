@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "word.h"
+#include "../include/word.h"
 
 /**
  * \brief Create new #word object

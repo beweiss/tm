@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "tape_action.h"
+#include "../include/tape_action.h"
 
 /**
  * \brief Create new #tape_action object
@@ -26,7 +26,7 @@ void tape_action_print(tape_action *this)
 {
 	if (!this)
 		return;
-	printf("\t\tTOKEN_READ: %u\n\t\tTOKEN_WRITE: %u\n\t\tSHIFT: ", this->token_read, this->token_write);
+	printf("\t\tTOKEN_READ : %u\n\t\tTOKEN_WRITE: %u\n\t\tSHIFT      : ", this->token_read, this->token_write);
 	switch (this->dir) {
 		case STAT:
 				printf("STATIONARY\n");

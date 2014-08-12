@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "tape_actions.h"
+#include "../include/tape_actions.h"
 
 /**
  * \brief Create new #tape_actions object

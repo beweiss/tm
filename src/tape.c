@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "tape.h"
-#include "constants.h"
-#include "singly_linked_list_macros.h"
+#include "../include/tape.h"
+#include "../include/constants.h"
+#include "../include/singly_linked_list_macros.h"
 
 /**
  * \brief Create new #tape object
@@ -19,17 +19,17 @@ tape *tape_new(word *input, ACCESS priv)
 	ret->priv = priv;
 
 	/* FIXME Add error handling */
-	ret->start = __tape_list_new();
+	ret->start = tape_cell_list_new();
 
 	if (!input) {
-EMPTY:		__tape_list_add_node(ret->start, __tape_new(BLANK));
+EMPTY:		tape_cell_list_add_node(ret->start, tape_cell_new(BLANK));
 		ret->pos = ret->start->head;
 		return ret;
 	}
 	if (input->length == 0)
 		goto EMPTY;
 	for (i = 0; i < input->length; i++)
-		__tape_list_add_node(ret->start, __tape_new(input->letters[i]));
+		tape_cell_list_add_node(ret->start, tape_cell_new(input->letters[i]));
 
 	ret->pos = ret->start->head;
 	return ret;
@@ -63,7 +63,7 @@ tape *tape_copy(tape *this)
  */
 void tape_add_token(tape *this, unsigned int token)
 {
-	__tape_list_add_node(this->start, __tape_new(token));
+	tape_cell_list_add_node(this->start, tape_cell_new(token));
 }
 
 /**
@@ -80,13 +80,13 @@ void tape_shift_pos(tape *this, SHIFT_DIR shift)
 {
 	if (shift == LEFT) {
 		if (!this->pos->prev) {
-			__tape_list_add_node_before(this->start, this->pos, __tape_new(BLANK));
+			tape_cell_list_add_node_before(this->start, this->pos, tape_cell_new(BLANK));
 		}
 		this->pos = this->pos->prev;
 	}
 	if (shift == RIGHT) {
 		if (!this->pos->next) {
-			__tape_list_add_node_after(this->start, this->pos, __tape_new(BLANK));
+			tape_cell_list_add_node_after(this->start, this->pos, tape_cell_new(BLANK));
 		}
 		this->pos = this->pos->next;
 	}
@@ -108,7 +108,7 @@ unsigned int tape_get_current_token(tape *this)
  */
 bool tape_is_descended_from(tape *this, alphabet *alph)
 {
-	struct __tape *iter = NULL;
+	struct tape_cell *iter = NULL;
 
 	if (!this)
 		return false;
@@ -151,7 +151,7 @@ word *tape_get_content(tape *this)
 	unsigned int size = this->start->size;
 	unsigned int *letters = malloc(size * sizeof(int));
 	unsigned int i = 0;
-	struct __tape *iter = this->start->head;
+	struct tape_cell *iter = this->start->head;
 
 	for (i = 0; i < size; i++) {
 		letters[i] = iter->token;
@@ -180,12 +180,19 @@ bool tape_apply_action(tape *this, tape_action *action)
 	return true;
 }
 
+void tape_apply_default_action(tape *this, edge_default *action)
+{
+	//FIXME privileges!!!!!!
+	this->pos->token = action->token_write;
+	tape_shift_pos(this, action->dir);
+}
+
 /**
  * \brief Free #tape object
  */
 void tape_free(tape *this)
 {
-	__tape_list_free(this->start);
+	tape_cell_list_free(this->start);
 }
 
 /**
@@ -209,5 +216,5 @@ void tape_print(tape *this)
 				break;
 	}
 	printf("\t");
-	__tape_list_print(this->start, this->pos);
+	tape_cell_list_print(this->start, this->pos);
 }

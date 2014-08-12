@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "singly_linked_list_macros.h"
-#include "state_list.h"
+#include "../include/singly_linked_list_macros.h"
+#include "../include/state_list.h"
 
 /**
  * \brief Create new #state_list object
@@ -141,8 +141,6 @@ void state_list_free(state_list *this)
 void state_list_print(state_list *this)
 {
 	state *iter = NULL;
-
-	printf("state_list:\n");
 
 	S_FOR_EACH_ENTRY(this->head, iter) {
 		state_print(iter);

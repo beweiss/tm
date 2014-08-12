@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "edge.h"
+#include "../include/edge.h"
 
 /**
  * \brief Create new #edge object
@@ -42,6 +42,6 @@ void edge_free(edge *this)
  */
 void edge_print(edge *this)
 {
-	printf("ID_DEST: %u\n", this->id_dest);
+	printf("ID_DEST    : %u\n", this->id_dest);
 	tape_actions_print(this->actions);
 }

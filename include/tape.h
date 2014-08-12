@@ -2,8 +2,9 @@
 #define TAPE_H_
 
 #include "word.h"
-#include "__tape_list.h"
+#include "tape_cell_list.h"
 #include "tape_action.h"
+#include "edge_default.h"
 
 /**
  * \enum ACCESS
@@ -35,8 +36,8 @@ typedef enum {
  */
 typedef struct {
 	ACCESS priv;
-	struct __tape_list *start;
-	struct __tape *pos;
+	struct tape_cell_list *start;
+	struct tape_cell *pos;
 } tape;
 
 tape *tape_new(word *input, ACCESS priv);
@@ -50,6 +51,7 @@ void tape_clear(tape *this);
 void tape_add_word(tape *this, word *input);
 word *tape_get_content(tape *this);
 bool tape_apply_action(tape *this, tape_action *action);
+void tape_apply_default_action(tape *this, edge_default *action);
 void tape_free(tape *this);
 void tape_print(tape *this);
 

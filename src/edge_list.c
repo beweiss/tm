@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "singly_linked_list_macros.h"
-#include "edge_list.h"
+#include "../include/singly_linked_list_macros.h"
+#include "../include/edge_list.h"
 
 /**
  * \brief Create new #edge_list object

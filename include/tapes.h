@@ -22,6 +22,7 @@ typedef struct {
 tapes *tapes_new(unsigned int num, tape *first, ...);
 tapes *tapes_copy(tapes *this);
 bool tapes_apply_actions(tapes *this, tape_actions *actions);
+void tapes_apply_default_action(tapes *this, edge_default *action);
 void tapes_free(tapes *this);
 void tapes_print(tapes *this);
 

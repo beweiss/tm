@@ -6,10 +6,10 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include "singly_linked_list_macros.h"
-#include "constants.h"
-#include "alphabet.h"
-#include "tm.h"
+#include "../include/singly_linked_list_macros.h"
+#include "../include/constants.h"
+#include "../include/alphabet.h"
+#include "../include/tm.h"
 
 static bool __tm_is_reachable(tm *this, state *state);
 static state *__tm_compute(tm *this, state *current);
@@ -52,7 +52,6 @@ tm *tm_new(tapes *tapes, alphabet *alph_input, alphabet *alph_tape)
 	ret->tapes = tapes;
 	//FIXME add error handling
 	ret->states = state_list_new();
-	//FIXME add checks for alphabet attributes........
 	ret->alph_input = alph_input;
 	ret->alph_tape = alph_tape;
 	//ret->is_det = is_det;
@@ -63,11 +62,12 @@ tm *tm_new(tapes *tapes, alphabet *alph_input, alphabet *alph_tape)
 /**
  * \brief Add new state to tm
  * \param type Type of the new #state
+ * \param out_default The ID of the default (implicit) target #state
  */
-void tm_add_state(tm *this, STATE_TYPE type)
+void tm_add_state(tm *this, STATE_TYPE type, edge_default *out_default)
 {
 	//FIXME first state may only be NORMAL
-	state_list_add_node(this->states, state_new(type));
+	state_list_add_node(this->states, state_new(type, out_default));
 }
 
 /**
@@ -92,9 +92,11 @@ state *tm_find_state(tm *this, unsigned int id)
  * \brief Add edge to tm
  *
  * - Make the following checks
+ * 	+ are the IDs valid
  * 	+ if src is accepting or rejecting state then do nothing
  * 	+ if there is already an edge from src to dest?
  * 	+ if one #tape_action object is NULL do nothing and return
+ * 	+ check if every token in action1 , ... is in tm::alph_tape
  *
  * \param src ID of the source #state
  * \param dest ID of the destination #state
@@ -108,9 +110,13 @@ edge *tm_add_edge(tm *this, unsigned int src, unsigned int dest, tape_action *ac
 		return NULL;
 	if (!tm_find_state(this, dest))
 		return NULL;
-	if (state_src->type == REJECT || state_src->type == ACCEPT)
+	if (state_src->type != NORMAL)
 		return NULL;
 	if (!action1)
+		return NULL;
+	if (!alphabet_contains(this->alph_tape, action1->token_read))
+		return NULL;
+	if (!alphabet_contains(this->alph_tape, action1->token_write))
 		return NULL;
 	va_list arguments;
 	unsigned int num = this->tapes->length;
@@ -134,6 +140,11 @@ edge *tm_add_edge(tm *this, unsigned int src, unsigned int dest, tape_action *ac
 	for (i = 1; i < num; i++) {
 		check = va_arg(arguments, tape_action*);
 		if (!check) {
+			free(action_array);
+			goto CLEANUP;
+		}
+		if (!alphabet_contains(this->alph_tape, check->token_read)
+		    || !alphabet_contains(this->alph_tape, check->token_write)) {
 			free(action_array);
 			goto CLEANUP;
 		}
@@ -198,12 +209,23 @@ static state *__tm_compute(tm *this, state *current)
 	if (current->type == REJECT)
 		return current;
 	edge *iter = NULL;
+	state *implicit = NULL;
 
+	tape_print(&this->tapes->tapes[0]);
+
+	//search for explicit edge
 	S_FOR_EACH_ENTRY(current->edges->head, iter) {
 		//currently only one token per outgoing edge is allowed (determinism)
 		if (tapes_apply_actions(this->tapes, iter->actions)) {
 			return __tm_compute(this, tm_find_state(this, iter->id_dest));
 		}
+	}
+	//if there was no explicit edge we use the implicit edge
+	implicit = tm_find_state(this, current->out_default->id_dest);
+	
+	if (implicit) {
+		tapes_apply_default_action(this->tapes, current->out_default);
+		return __tm_compute(this, implicit);
 	}
 	return NULL;
 }
@@ -283,13 +305,38 @@ void tm_export_to_dot_file(tm *this, char *path)
 	strncat(total, "\n\tnode [shape = circle, color=black]\n\tqi -> q0\n", strlen("\n\tqi -> q0\n\tnode [shape = circle, color=black]\n\tqi -> q0\n"));
 
 	S_FOR_EACH_ENTRY(this->states->head, iter) {
+		if (iter->out_default) {
+			strncat(total, "\tq", 2);
+			sprintf(id, "%u", iter->id);
+			strncat(total, id, strlen(id));
+			strncat(total, " -> q", 5);
+
+			sprintf(id, "%u", iter->out_default->id_dest);
+			strncat(total, id, strlen(id));
+
+			strncat(total, "[label = \"*;", strlen("[label = \"*;"));
+			sprintf(id, "%u", iter->out_default->token_write);
+			strncat(total, id, strlen(id));
+			strncat(total, ",", 1);
+			switch (iter->out_default->dir) {
+			case STAT:
+				strncat(total, "S", strlen("S"));
+				break;
+			case LEFT:
+				strncat(total, "L", strlen("L"));
+				break;
+			case RIGHT:
+				strncat(total, "R", strlen("R"));
+				break;
+			}
+			strncat(total, "\"]\n", strlen("\"]\n"));
+		}
 		S_FOR_EACH_ENTRY(iter->edges->head, edge_iter) {
 				strncat(total, "\tq", 2);
 				sprintf(id, "%u", iter->id);
 				strncat(total, id, strlen(id));
-				strncat(total, " -> ", 4);
+				strncat(total, " -> q", 5);
 
-				strncat(total, "q", 1);
 				sprintf(id, "%u", edge_iter->id_dest);
 				strncat(total, id, strlen(id));
 
@@ -406,12 +453,13 @@ void tm_print(tm *this)
 	/* FIXME Add error handling */
 	if (!this)
 		return;
-	printf("TURING MACHINE :\n");
-	printf("INPUT ALPHABET : ");
+	printf("TURING MACHINE\n");
+	printf("INPUT ALPHABET\n\t");
 	alphabet_print(this->alph_input);
-	printf("\nTAPE ALPHABET  : ");
+	printf("TAPE ALPHABET\n\t");
 	alphabet_print(this->alph_tape);
-	printf("\n");
+	printf("TAPES\n\t");
 	tapes_print(this->tapes);
+	printf("STATES\n\t");
 	state_list_print(this->states);
 }

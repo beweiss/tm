@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "alphabet.h"
+#include "../include/alphabet.h"
 
 static int compare_int(const void *a, const void *b)
 {

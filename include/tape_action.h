@@ -1,12 +1,7 @@
 #ifndef TAPE_ACTION_H_
 #define TAPE_ACTION_H_
 
-/*! This enum contains the possible shift directions on a tape */
-typedef enum {
-	STAT = 0, /*!< Do not move on the tape */
-	LEFT = -1,/*!< Move left on the tape */
-	RIGHT = 1 /*!< Move right on the tape */
-} SHIFT_DIR;
+#include "constants.h"
 
 /**
  * \struct tape_action

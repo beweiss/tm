@@ -60,7 +60,7 @@ typedef struct {
 } tm;
 
 tm *tm_new(tapes *tapes, alphabet *alph_input, alphabet *alph_tape);
-void tm_add_state(tm *this, STATE_TYPE type);
+void tm_add_state(tm *this, STATE_TYPE type, edge_default *out_default);
 void tm_remove_state(tm *this, unsigned int id);
 state *tm_find_state(tm *this, unsigned int id);
 //FIXME maybe no variable arg list and ONE tape_actions

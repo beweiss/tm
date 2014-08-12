@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "tapes.h"
+#include "../include/tapes.h"
 
 /**
  * \brief Create new #tapes object
@@ -76,6 +76,15 @@ bool tapes_apply_actions(tapes *this, tape_actions *actions)
 	return true;
 }
 
+void tapes_apply_default_action(tapes *this, edge_default *action)
+{
+	unsigned int i = 0;
+
+	for (i = 0; i < this->length; i++) {
+		tape_apply_default_action(&this->tapes[i], action);
+	}
+}
+
 /**
  * \brief Free #tapes object
  */
@@ -96,10 +105,6 @@ void tapes_print(tapes *this)
 {
 	unsigned int i = 0;
 
-	printf("TAPES: \n");
-
-	for (i = 0; i < this->length; i++) {
+	for (i = 0; i < this->length; i++)
 		tape_print(&this->tapes[i]);
-		printf("\n");
-	}
 }

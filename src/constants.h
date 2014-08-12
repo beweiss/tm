@@ -1,0 +1,1 @@
+#define BLANK 0

@@ -54,9 +54,9 @@ typedef struct {
 	tapes *tapes;
 	alphabet *alph_input;
 	alphabet *alph_tape;
+	state *accept;
+	state *reject;
 	//state *current;
-	//TODO Later.....
-	//bool is_det;
 } tm;
 
 tm *tm_new(tapes *tapes, alphabet *alph_input, alphabet *alph_tape);
@@ -65,15 +65,12 @@ void tm_remove_state(tm *this, unsigned int id);
 state *tm_find_state(tm *this, unsigned int id);
 //FIXME maybe no variable arg list and ONE tape_actions
 edge *tm_add_edge(tm *this, unsigned int src, unsigned int dest, tape_action *action1, ...);
-bool tm_is_reachable(tm *this, unsigned int id);
 tm *tm_copy(tm *this);
 state *tm_compute(tm *this);
 
 //check circles!!!!!
 word *tm_gen_accepted_word(tm *this);
 
-void tm_clear_tape(tm *this, tape *obj);
-void tm_write_word_to_tape(tm *this, word *input);
 void tm_export_to_dot_file(tm *this, char *path);
 edge *tm_find_edge(tm *this, unsigned int src, unsigned int dest, unsigned int token);
 edge *tm_find_edge_inexact(tm *this, unsigned int src, unsigned int dest);

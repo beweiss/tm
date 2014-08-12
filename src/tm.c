@@ -11,7 +11,6 @@
 #include "../include/alphabet.h"
 #include "../include/tm.h"
 
-static bool __tm_is_reachable(tm *this, state *state);
 static state *__tm_compute(tm *this, state *current);
 
 /**
@@ -20,10 +19,10 @@ static state *__tm_compute(tm *this, state *current);
  * - Make the following checks:
  * 	+ is argument tapes not NULL
  * 	+ is argument alph_input not NULL and subset of alph_tape<br>
- * 	and may not contain BLANK
+ * 	  and may not contain BLANK
  * 	+ is argument alph_tape not NULL and contains BLANK
  * 	+ is every character on the input tape (very first tape) in the input<br>
- * 	alphabet
+ * 	  alphabet
  *
  * \param tapes tm::tapes
  * \param alph_input tm::alph_input
@@ -54,20 +53,58 @@ tm *tm_new(tapes *tapes, alphabet *alph_input, alphabet *alph_tape)
 	ret->states = state_list_new();
 	ret->alph_input = alph_input;
 	ret->alph_tape = alph_tape;
-	//ret->is_det = is_det;
+	ret->accept = NULL;
+	ret->reject = NULL;
 
 	return ret;
 }
 
 /**
  * \brief Add new state to tm
- * \param type Type of the new #state
+ *
+ * - Make the following checks
+ * 	+ first state have to be a NORMAL state
+ * 	+ only ONE accepting state and only ONE rejecting state
+ * 	+ if type == REJECT or type == ACCEPT out_default has to be NULL<br>
+ * 	  because these states may not have any outgoing edges
+ *
+ * \param type Type of the new state
  * \param out_default The ID of the default (implicit) target #state
  */
 void tm_add_state(tm *this, STATE_TYPE type, edge_default *out_default)
 {
-	//FIXME first state may only be NORMAL
-	state_list_add_node(this->states, state_new(type, out_default));
+	state *new = NULL;
+
+	if (!this)
+		return;
+	if (!this->states->head) {
+		if (type != NORMAL)
+			return;
+	}
+	switch (type) {
+	case NORMAL:
+		new = state_new(out_default);
+		state_list_add_node(this->states, new);
+		break;
+	case ACCEPT:
+		if (this->accept)
+			return;
+		if (out_default)
+			return;
+		new = state_new(out_default);
+		this->accept = new;
+		state_list_add_node(this->states, new);
+		break;
+	case REJECT:
+		if (this->reject)
+			return;
+		if (out_default)
+			return;
+		new = state_new(out_default);
+		this->reject = new;
+		state_list_add_node(this->states, new);
+		break;
+	}
 }
 
 /**
@@ -76,6 +113,8 @@ void tm_add_state(tm *this, STATE_TYPE type, edge_default *out_default)
  */
 void tm_remove_state(tm *this, unsigned int id)
 {
+	if (!this)
+		return;
 	//state_list_remove_node(this->states, id);
 }
 
@@ -85,6 +124,8 @@ void tm_remove_state(tm *this, unsigned int id)
  */
 state *tm_find_state(tm *this, unsigned int id)
 {
+	if (!this)
+		return NULL;
 	return state_list_find_node(this->states, id);
 }
 
@@ -110,7 +151,7 @@ edge *tm_add_edge(tm *this, unsigned int src, unsigned int dest, tape_action *ac
 		return NULL;
 	if (!tm_find_state(this, dest))
 		return NULL;
-	if (state_src->type != NORMAL)
+	if (state_src == this->accept || state_src == this->reject)
 		return NULL;
 	if (!action1)
 		return NULL;
@@ -155,7 +196,6 @@ edge *tm_add_edge(tm *this, unsigned int src, unsigned int dest, tape_action *ac
 
 	new_edge = edge_new(dest, actions);
 
-	//FIXME add safety checks (token not in input_alph or tape_alph...)
 	edge_list_add_node(state_src->edges, new_edge);
 CLEANUP:
 	va_end(arguments);
@@ -163,30 +203,11 @@ CLEANUP:
 }
 
 /**
- * \brief Check if #state is reachable
- *
- * \param id ID of the wanted #state
- */
-bool tm_is_reachable(tm *this, unsigned int id)
-{
-	return __tm_is_reachable(this, tm_find_state(this, id));
-}
-
-/**
- * \brief Check if #state is reachable
- * 
- * Use of limited breadth-first-search to avoid cycles
- * Helper function of tm_is_reachable
- *
- * \param id ID of the wanted #state
- */
-static bool __tm_is_reachable(tm *this, state *state)
-{
-	return false;
-}
-
-/**
  * \brief Start the computation of the Turing Machine
+ *
+ * There have to be at least one state and there have to be
+ * 1 accepting state or 1 rejecting state.
+ *
  * \return The last #state we reached
  */
 state *tm_compute(tm *this)
@@ -194,6 +215,8 @@ state *tm_compute(tm *this)
 	if (!this)
 		return NULL;
 	if (!this->states->head)
+		return NULL;
+	if (!this->accept && !this->reject)
 		return NULL;
 	return __tm_compute(this, this->states->head);
 }
@@ -204,9 +227,9 @@ state *tm_compute(tm *this)
  */
 static state *__tm_compute(tm *this, state *current)
 {
-	if (current->type == ACCEPT)
+	if (current == this->accept)
 		return current;
-	if (current->type == REJECT)
+	if (current == this->reject)
 		return current;
 	edge *iter = NULL;
 	state *implicit = NULL;
@@ -236,11 +259,10 @@ static state *__tm_compute(tm *this, state *current)
  */
 word *tm_gen_accepted_word(tm *this)
 {
+	if (!this)
+		return NULL;
 	return NULL;
 }
-
-//void tm_clear_tape(tm *this, tape *obj);
-//void tm_write_word_to_tape(tm *this, word *input);
 
 /**
  * \brief Copy #tm object
@@ -248,6 +270,8 @@ word *tm_gen_accepted_word(tm *this)
  */
 tm *tm_copy(tm *this)
 {
+	if (!this)
+		return NULL;
 	/* FIXME Add error handling */
 	tm *ret = malloc(sizeof(*ret));
 
@@ -266,6 +290,10 @@ tm *tm_copy(tm *this)
  */
 void tm_export_to_dot_file(tm *this, char *path)
 {
+	if (!this)
+		return;
+	if (!path)
+		return;
 	char *dot1 = 	"digraph turing_machine {\n\trankdir=LR\n\t"
 			"size=\"50\"\n\n\tnode [shape = point] qi\n\t";
 	char *dot2 = 	"node [shape = doublecircle, color=red] ";
@@ -286,7 +314,7 @@ void tm_export_to_dot_file(tm *this, char *path)
 	}
 
 	S_FOR_EACH_ENTRY(this->states->head, iter) {
-		if (iter->type == REJECT) {
+		if (iter == this->reject) {
 			strncat(total, "q", 1);
 			sprintf(id, "%u", iter->id);
 			strncat(total, id, strlen(id));
@@ -295,7 +323,7 @@ void tm_export_to_dot_file(tm *this, char *path)
 	}
 	strncat(total, "\n\tnode [shape = doublecircle, color=green] ", strlen("\n\tnode [shape = doublecircle, color=green] "));
 	S_FOR_EACH_ENTRY(this->states->head, iter) {
-		if (iter->type == ACCEPT) {
+		if (iter == this->accept) {
 			strncat(total, "q", 1);
 			sprintf(id, "%u", iter->id);
 			strncat(total, id, strlen(id));
@@ -367,11 +395,6 @@ void tm_export_to_dot_file(tm *this, char *path)
 	}
 	strncat(total, "}\n", 2);
 
-	if (!path) {
-		printf("%s", total);
-		return;
-	}
-
 	fd = open(path, O_WRONLY|O_CREAT|O_TRUNC, S_IRWXU);
 
 	write(fd, total, strlen(total));
@@ -392,6 +415,8 @@ void tm_export_to_dot_file(tm *this, char *path)
 edge *tm_find_edge(tm *this, unsigned int src, unsigned int dest, unsigned int token)
 {
 	//FIXME maybe bullshit
+	if (!this)
+		return NULL;
 	return NULL;
 }
 
@@ -428,7 +453,9 @@ edge *tm_find_edge_inexact(tm *this, unsigned int src, unsigned int dest)
  */
 tape *tm_select_tape(tm *this, unsigned int index)
 {
-	if (index > this->tapes->length || index < 0)
+	if (!this)
+		return NULL;
+	if (index >= this->tapes->length || index < 0)
 		return NULL;
 	return &this->tapes->tapes[index];
 }
@@ -438,6 +465,8 @@ tape *tm_select_tape(tm *this, unsigned int index)
  */
 void tm_free(tm *this)
 {
+	if (!this)
+		return;
 	state_list_free(this->states);
 	tapes_free(this->tapes);
 	alphabet_free(this->alph_input);

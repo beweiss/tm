@@ -47,7 +47,7 @@ void strlen_less_10_tm()
 	tape_print(&machine1->tapes->tapes[0]);
 
 	tm_export_to_dot_file(machine1, "/home/benedikt/tm_short.dot");
-	tm_print(machine1);
+	//tm_print(machine1);
 	tm_free(machine1);
 	word_free(word_one);
 }

@@ -42,7 +42,24 @@ EMPTY:		tape_cell_list_add_node(ret->start, tape_cell_new(BLANK));
  */
 tape *tape_copy(tape *this)
 {
-	return NULL;
+	tape *ret = malloc(sizeof(*ret));
+	struct tape_cell *iter_old = this->start->head;
+	struct tape_cell *iter_new = NULL;
+
+	ret->priv = this->priv;
+	ret->start = tape_cell_list_copy(this->start);
+
+	iter_new = ret->start->head;
+
+	while (iter_old) {
+		if (iter_old == this->pos) {
+			ret->pos = iter_new;
+			break;
+		}
+		iter_new = iter_new->next;
+		iter_old = iter_old->next;
+	}
+	return ret;
 }
 
 /**

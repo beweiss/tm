@@ -132,6 +132,18 @@ void tape_cell_list_delete_node(struct tape_cell_list *this, struct tape_cell *d
 	return;
 }
 
+struct tape_cell_list *tape_cell_list_copy(struct tape_cell_list *this)
+{
+	struct tape_cell_list *ret = tape_cell_list_new();
+	struct tape_cell *iter_old = this->head;
+
+	while (iter_old) {
+		tape_cell_list_add_node(ret, tape_cell_copy(iter_old));
+		iter_old = iter_old->next;
+	}
+	return ret;
+}
+
 /**
  * \brief Free #tape_cell_list object
  */

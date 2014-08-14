@@ -49,7 +49,14 @@ tapes *tapes_copy(tapes *this)
 	unsigned int num = this->length;
 
 	//FIXME add error handling
-	ret->tapes = malloc(sizeof(tape) * num);
+	if (num > 1) {
+		ret->tapes = malloc(sizeof(tape) * num);
+	}
+	else {
+		ret->tapes = tape_copy(&this->tapes[0]);
+		ret->length = num;
+		return ret;
+	}
 
 	ret->length = num;
 	for (i = 0; i < num; i++) {

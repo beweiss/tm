@@ -30,6 +30,7 @@ struct tape_cell_list *tape_cell_list_new();
 void tape_cell_list_add_node(struct tape_cell_list *this, struct tape_cell *new);
 void tape_cell_list_add_node_before(struct tape_cell_list *this, struct tape_cell *before, struct tape_cell *new);
 void tape_cell_list_add_node_after(struct tape_cell_list *this, struct tape_cell *after, struct tape_cell *new);
+struct tape_cell_list *tape_cell_list_copy(struct tape_cell_list *this);
 void tape_cell_list_delete_node(struct tape_cell_list *this, struct tape_cell *del);
 void tape_cell_list_free(struct tape_cell_list *this);
 void tape_cell_list_print(struct tape_cell_list *this, struct tape_cell *highlight);

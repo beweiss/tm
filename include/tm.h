@@ -7,6 +7,11 @@
 #include "state_list.h"
 #include "constants.h"
 
+typedef struct {
+	state *state_cur;
+	tapes *tapes_cur;
+} tm_cur_state;
+
 //FIXME also mention the "More than one tape"-story in this documentation...
 /*TODO IMPLEMENT:
 
@@ -57,7 +62,8 @@ typedef struct {
 	alphabet *alph_tape;
 	state *accept;
 	state *reject;
-	//state *current;
+
+	tm_cur_state *current;
 } tm;
 
 tm *tm_new(tapes *tapes, alphabet *alph_input, alphabet *alph_tape);
@@ -68,6 +74,7 @@ state *tm_find_state(tm *this, unsigned int id);
 edge *tm_add_edge(tm *this, unsigned int src, unsigned int dest, tape_action *action1, ...);
 tm *tm_copy(tm *this);
 state *tm_compute(tm *this);
+state *tm_compute_step(tm *this);
 
 //check circles!!!!!
 word *tm_gen_accepted_word(tm *this);

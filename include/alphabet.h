@@ -17,6 +17,7 @@ typedef struct {
 } alphabet;
 
 alphabet *alphabet_new(unsigned int *letters, unsigned int length);
+void alphabet_init(alphabet *this, unsigned int *letters, unsigned int length);
 alphabet *alphabet_copy(alphabet *this);
 alphabet *alphabet_concat(alphabet *this, alphabet *obj);
 alphabet *alphabet_unite(alphabet *this, alphabet *obj);

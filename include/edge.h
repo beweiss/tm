@@ -27,6 +27,7 @@ struct edge {
 };
 
 edge *edge_new(unsigned int id_dest, tape_actions *actions);
+void edge_init(edge *this, unsigned int id_dest, tape_actions *actions);
 edge *edge_copy(edge *this);
 void edge_free(edge *this);
 void edge_print(edge *this);

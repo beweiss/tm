@@ -25,12 +25,21 @@ state *__state_new(unsigned int id, edge_default *out_default, edge_list *edges)
 {
 	//FIXME add error handling
 	state *ret = malloc(sizeof(*ret));
-
-	ret->id = id;
-	ret->out_default = out_default;
-	ret->edges = edges;
-	ret->next = NULL;
+	__state_init(ret, id, out_default, edges);
 	return ret;
+}
+
+void state_init(state *this, edge_default *out_default, edge_list *edges)
+{
+	__state_init(this, 0, out_default, edges);
+}
+
+void __state_init(state *this, unsigned int id, edge_default *out_default, edge_list *edges)
+{
+	this->id = id;
+	this->out_default = out_default;
+	this->edges = edges;
+	this->next = NULL;
 }
 
 /**

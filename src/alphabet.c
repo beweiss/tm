@@ -28,22 +28,30 @@ static int compare_int(const void *a, const void *b)
 alphabet *alphabet_new(unsigned int *letters, unsigned int length)
 {
 	/* FIXME Add error handling */
-	alphabet *ret = malloc(sizeof(alphabet));
+	alphabet *ret = malloc(sizeof(*ret));
+	alphabet_init(ret, letters, length);
+	return ret;
+}
+
+void alphabet_init(alphabet *this, unsigned int *letters, unsigned int length)
+{
+	if (!length)
+		return;
+	if (!letters)
+		return;
 	unsigned int i = 0;
-	unsigned int new_length = length;
-	unsigned int j = 0;
+	unsigned int j = 1;
 
 	qsort(letters, length, sizeof(int), compare_int);
 	for (i = 0; i < length - 1; i++) {
-		if (letters[i] == letters[i + 1])
-			new_length--;
-		else
+		if (letters[i] != letters[i + 1]) {
 			j++;
+			continue;
+		}
 		letters[j] = letters[i + 1];
 	}
-	ret->letters = letters;
-	ret->length = new_length;
-	return ret;
+	this->letters = letters;
+	this->length = j;
 }
 
 /**

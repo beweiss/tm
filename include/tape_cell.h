@@ -1,4 +1,6 @@
-//FIXME new name: token!
+#ifndef TAPE_CELL_H_
+#define TAPE_CELL_H_
+
 /**
  * \struct tape_cell
  * \brief Represents the "Node/Entry Class" of #tape_cell_list
@@ -20,3 +22,5 @@ struct tape_cell *tape_cell_new(unsigned int token);
 struct tape_cell *tape_cell_copy(struct tape_cell *this);
 void tape_cell_free(struct tape_cell *this);
 void tape_cell_print(struct tape_cell *this);
+
+#endif

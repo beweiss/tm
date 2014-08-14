@@ -20,6 +20,7 @@ typedef struct {
 } state_list;
 
 state_list *state_list_new();
+void state_list_init(state_list *this);
 void state_list_add_node(state_list *this, state *new);
 state *state_list_find_node(state_list *this, unsigned int id);
 state_list *state_list_copy(state_list *this);

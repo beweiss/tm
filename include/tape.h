@@ -41,7 +41,6 @@ typedef struct {
 } tape;
 
 tape *tape_new(word *input, ACCESS priv);
-tape *tape_new_empty(ACCESS priv);
 tape *tape_copy(tape *this);
 void tape_add_token(tape *this, unsigned int token);
 void tape_shift_pos(tape *this, SHIFT_DIR shift);

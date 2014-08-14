@@ -11,11 +11,14 @@ edge_list *edge_list_new()
 {
 	//FIXME add error handling
 	edge_list *ret = malloc(sizeof(*ret));
-
-	ret->head = NULL;
-	ret->size = 0;
-
+	edge_list_init(ret);
 	return ret;
+}
+
+void edge_list_init(edge_list *this)
+{
+	this->head = NULL;
+	this->size = 0;
 }
 
 /**

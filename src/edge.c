@@ -12,11 +12,15 @@ edge *edge_new(unsigned int id_dest, tape_actions *actions)
 {
 	//FIXME add error handling
 	edge *ret = malloc(sizeof(*ret));
-
-	ret->id_dest = id_dest;
-	ret->actions = actions;
-	ret->next = NULL;
+	edge_init(ret, id_dest, actions);
 	return ret;
+}
+
+void edge_init(edge *this, unsigned int id_dest, tape_actions *actions)
+{
+	this->id_dest = id_dest;
+	this->actions = actions;
+	this->next = NULL;
 }
 
 /**

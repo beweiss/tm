@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -17,18 +18,20 @@ void strlen_less_10_tm()
 	unsigned int j = 0;
 	unsigned int x = 0;
 
-	if (machine1 == NULL)
+	if (machine1 == NULL) {
 		printf("WTF???\n");
+		exit(0);
+	}
 
 	for (i = 0; i < 9; i++)
-		tm_add_state(machine1, NORMAL, edge_default_new(i + 1, 0, RIGHT));
+		tm_add_state(machine1, NORMAL, edge_default_new(i + 1, BLANK, RIGHT));
 
-	tm_add_state(machine1, NORMAL, edge_default_new(11, 0, STAT));
+	tm_add_state(machine1, NORMAL, edge_default_new(11, BLANK, STAT));
 	tm_add_state(machine1, ACCEPT, NULL);
 	tm_add_state(machine1, REJECT, NULL);
 
 	for (i = 0; i < 10; i++) {
-		if (!tm_add_edge(machine1, i, 10, tape_action_new(0, i, STAT)))
+		if (!tm_add_edge(machine1, i, 10, tape_action_new(BLANK, i, STAT)))
 			printf("WAAAAAAAAAAAAAAAAAAAAAS???\n");	
 	}
 
@@ -36,7 +39,7 @@ void strlen_less_10_tm()
 
 	if (check) {
 		printf("Jop\n");
-		if (check->type == ACCEPT) {
+		if (check == machine1->accept) {
 			printf("JAAAAAAAAAAAAAA\n");
 		}
 	}

@@ -1,4 +1,8 @@
+#ifndef TAPE_CELL_LIST_H_
+#define TAPE_CELL_LIST_H_
+
 #include "tape_cell.h"
+#include "word.h"
 
 /**
  * \struct tape_cell_list
@@ -29,3 +33,5 @@ void tape_cell_list_add_node_after(struct tape_cell_list *this, struct tape_cell
 void tape_cell_list_delete_node(struct tape_cell_list *this, struct tape_cell *del);
 void tape_cell_list_free(struct tape_cell_list *this);
 void tape_cell_list_print(struct tape_cell_list *this, struct tape_cell *highlight);
+
+#endif

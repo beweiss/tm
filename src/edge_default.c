@@ -5,12 +5,15 @@
 edge_default *edge_default_new(unsigned int dest, unsigned int write, SHIFT_DIR dir)
 {
 	edge_default *ret = malloc(sizeof(*ret));
-
-	ret->id_dest = dest;
-	ret->token_write = write;
-	ret->dir = dir;
-
+	edge_default_init(ret, dest, write, dir);
 	return ret;
+}
+
+void edge_default_init(edge_default *this, unsigned int dest, unsigned int write, SHIFT_DIR dir)
+{
+	this->id_dest = dest;
+	this->token_write = write;
+	this->dir = dir;
 }
 
 void edge_default_free(edge_default *this)

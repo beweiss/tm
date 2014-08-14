@@ -11,11 +11,14 @@ state_list *state_list_new()
 {
 	//FIXME add error handling
 	state_list *ret = malloc(sizeof(*ret));
-
-	ret->head = NULL;
-	ret->size = 0;
-
+	state_list_init(ret);
 	return ret;
+}
+
+void state_list_init(state_list *this)
+{
+	this->head = NULL;
+	this->size = 0;
 }
 
 /**

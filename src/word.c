@@ -9,10 +9,14 @@ word *word_new(unsigned int *letters, unsigned int length)
 {
 	/* FIXME Add error handling */
 	word *ret = malloc(sizeof(*ret));
-
-	ret->letters = letters;
-	ret->length = length;
+	word_init(ret, letters, length);
 	return ret;
+}
+
+void word_init(word *this, unsigned int *letters, unsigned int length)
+{
+	this->letters = letters;
+	this->length = length;
 }
 
 /**

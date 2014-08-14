@@ -5,6 +5,7 @@
 #include <stdarg.h>
 #include "tapes.h"
 #include "state_list.h"
+#include "constants.h"
 
 //FIXME also mention the "More than one tape"-story in this documentation...
 /*TODO IMPLEMENT:

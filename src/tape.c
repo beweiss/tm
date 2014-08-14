@@ -35,18 +35,6 @@ EMPTY:		tape_cell_list_add_node(ret->start, tape_cell_new(BLANK));
 	return ret;
 }
 
-/**
- * \brief Create new #tape object without input #word
- *
- * \see tape_new
- *
- * \return New #tape object
- */
-tape *tape_new_empty(ACCESS priv)
-{
-	return tape_new(NULL, priv);
-}
-
 //FIXME CONSIDER: pos == start (new tm == new status of computation? or not???!!!)
 /**
  * \brief Copy #tape object

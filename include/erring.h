@@ -1,7 +1,7 @@
 #ifndef ERRING_H_
 #define ERRING_H_
 
-#include "../include/error.h"
+#include <tm/error.h>
 
 #define E_CRIT "CRITICAL "
 

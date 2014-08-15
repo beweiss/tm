@@ -1,8 +1,8 @@
 #ifndef TAPE_CELL_LIST_H_
 #define TAPE_CELL_LIST_H_
 
-#include "tape_cell.h"
-#include "word.h"
+#include <tm/tape_cell.h>
+#include <tm/word.h>
 
 /**
  * \struct tape_cell_list

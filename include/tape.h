@@ -3,9 +3,9 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "word.h"
-#include "tape_cell_list.h"
-#include "tape_actions.h"
+#include <tm/word.h>
+#include <tm/tape_cell_list.h>
+#include <tm/tape_actions.h>
 
 /**
  * \struct tape

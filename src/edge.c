@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../include/edge.h"
-#include "../include/erring.h"
+#include <tm/edge.h>
+#include <tm/erring.h>
 
 static void __edge_init(edge *this, state *target, bool accept_reject, tape_actions *actions);
 

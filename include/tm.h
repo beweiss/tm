@@ -3,10 +3,10 @@
 
 #include <stdbool.h>
 #include <stdarg.h>
-#include "tapes.h"
-#include "state_list.h"
-#include "constants.h"
-#include "word.h"
+#include <tm/tapes.h>
+#include <tm/state_list.h>
+#include <tm/constants.h>
+#include <tm/word.h>
 
 typedef struct {
 	state *state_cur; //shallow copy on tm_cur_state_copy()

@@ -2,8 +2,8 @@
 #define TAPES_H_
 
 #include <stdarg.h>
-#include "tape.h"
-#include "tape_actions.h"
+#include <tm/tape.h>
+#include <tm/tape_actions.h>
 
 /**
  * \struct tapes

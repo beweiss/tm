@@ -2,7 +2,7 @@
 #define TAPE_ACTIONS_H_
 
 #include <stdint.h>
-#include "constants.h"
+#include <tm/constants.h>
 
 /**
  * \struct tape_actions

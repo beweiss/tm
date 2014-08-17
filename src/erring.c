@@ -16,8 +16,6 @@ void erring_init(unsigned int size_max)
 	//FIXME add error handling - critical error!
 	erring.data = malloc(size_max * sizeof(struct error));
 
-	erring.data = NULL;
-
 	if (!(erring.data))
 		error_at_line(0, errno, __FILE__, __LINE__, "CRITICAL ERROR in %s", __func__);
 

@@ -1,10 +1,26 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <inttypes.h>
+#include <error.h>
+#include <errno.h>
 #include "../include/erring.h"
+
+#define MAX_ERRING_SIZE 1000
 
 __attribute__((constructor))
 void tm_init()
 {
-	//FIXME maybe use here environment variable as option
-	erring_init(100);
+	char *env_size = getenv("TM_ERRING_SIZE");
+	unsigned int size = 100;
+
+	if (env_size) {
+		unsigned int ret = strtoul(env_size, NULL, 10);
+
+		if (ret <= MAX_ERRING_SIZE && ret)
+			size = ret;
+	}
+	printf("%u\n", size);
+	erring_init(size);
 }
 
 __attribute__((destructor))

@@ -8,9 +8,37 @@
 #include "constants.h"
 
 typedef struct {
-	state *state_cur;
-	tapes *tapes_cur;
+	state *state_cur; //shallow copy on tm_cur_state_copy()
+	tapes *tapes_cur; //deep copy on tm_cur_state_copy()
 } tm_cur_state;
+
+/**
+tm_cur_state *tm_get_current_state(tm *this) - return pointer to tm_cur_state struct
+static inline int *__tm_compute_step(tm *this); - touches only tm_cur_state
+int tm_compute_step(tm *this) {
+	__tm_compute_step(this);
+}
+int tm_compute(tm *this) { call __tm_compute_step() until we reached accepting or
+			   rejecting state
+}
+
+tm_cur_state *tm_simulate_compute(tm *this)
+{
+	tm_cur_state *save = tm_cur_state_copy(this->current);
+	tm_cur_state *ret = this->current;
+
+	tm_compute(this);
+
+	this->current = save;
+
+	return ret;
+}
+
+//for this we need an internal list...
+
+struct tape_actions_list
+tm_compute_step_reverse(tm *this) - recovers the last transition...
+
 
 //FIXME also mention the "More than one tape"-story in this documentation...
 /*TODO IMPLEMENT:

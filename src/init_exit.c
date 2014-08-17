@@ -19,7 +19,6 @@ void tm_init()
 		if (ret <= MAX_ERRING_SIZE && ret)
 			size = ret;
 	}
-	printf("%u\n", size);
 	erring_init(size);
 }
 

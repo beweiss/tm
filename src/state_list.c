@@ -94,7 +94,7 @@ state_list *state_list_copy(state_list *this)
  */
 void state_list_delete_node(state_list *this, unsigned int id)
 {
-	__state_list_delete_node(this, state_list_find_node(this, id));
+	state_list_delete_node_exact(this, state_list_find_node(this, id));
 }
 
 /**
@@ -104,7 +104,7 @@ void state_list_delete_node(state_list *this, unsigned int id)
  * \see state_list_delete_node
  *
  */
-void __state_list_delete_node(state_list *this, state *del)
+void state_list_delete_node_exact(state_list *this, state *del)
 {
 	if (!this)
 		return;
@@ -134,7 +134,7 @@ void __state_list_delete_node(state_list *this, state *del)
 void state_list_free(state_list *this)
 {
 	while (this->head)
-		__state_list_delete_node(this, this->head);
+		state_list_delete_node_exact(this, this->head);
 	free(this);
 }
 

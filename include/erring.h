@@ -4,7 +4,7 @@
 #include "../include/error.h"
 
 #define erring_add(err_msg) __erring_add_long(__FILE__, __func__, __LINE__, (err_msg))
-#define erring_add_default(type) __erring_add_default(__FILE__, __func__, __LINE__, (type))
+#define erring_add_default(type) __erring_add_long_default(__FILE__, __func__, __LINE__, (type))
 
 /**
  * \struct tm_erring
@@ -25,10 +25,10 @@ struct erring {
 	struct error *data;
 };
 
-void __erring_init(unsigned int size_max);
-void __erring_free();
+void erring_init(unsigned int size_max);
+void erring_add_long(const char *file, const char *func, const int line, const char *err_msg);
+void erring_add_long_default(const char *file, const char *func, const int line, enum ERROR_TYPE type);
+void erring_free();
 void erring_print();
-void __erring_add_long(const char *file, const char *func, const int line, const char *err_msg);
-void __erring_add_default(const char *file, const char *func, const int line, enum ERROR_TYPE type);
 
 #endif

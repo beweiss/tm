@@ -74,7 +74,7 @@ edge_list *edge_list_copy(edge_list *this)
  */
 void edge_list_delete_node(edge_list *this, unsigned int id)
 {
-	__edge_list_delete_node(this, edge_list_find_node(this, id));
+	edge_list_delete_node_exact(this, edge_list_find_node(this, id));
 }
 
 /**
@@ -84,7 +84,7 @@ void edge_list_delete_node(edge_list *this, unsigned int id)
  * \see edge_list_delete_node
  *
  */
-void __edge_list_delete_node(edge_list *this, edge *del)
+void edge_list_delete_node_exact(edge_list *this, edge *del)
 {
 	if (!this)
 		return;
@@ -114,7 +114,7 @@ void __edge_list_delete_node(edge_list *this, edge *del)
 void edge_list_free(edge_list *this)
 {
 	while (this->head)
-		__edge_list_delete_node(this, this->head);
+		edge_list_delete_node_exact(this, this->head);
 	free(this);
 }
 

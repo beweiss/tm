@@ -25,6 +25,6 @@ struct error {
 
 */
 
-void __error_print(struct error *this);
+void error_print(struct error *this);
 
 #endif

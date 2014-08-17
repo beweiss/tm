@@ -9,7 +9,7 @@
  */
 state *state_new(edge_default *out_default)
 {
-	return __state_new(0, out_default, edge_list_new());
+	return state_new_exact(0, out_default, edge_list_new());
 }
 
 /**
@@ -21,20 +21,20 @@ state *state_new(edge_default *out_default)
  * \param edges Outgoing edges in #edge_list of #state
  * \return New #state object
  */
-state *__state_new(unsigned int id, edge_default *out_default, edge_list *edges)
+state *state_new_exact(unsigned int id, edge_default *out_default, edge_list *edges)
 {
 	//FIXME add error handling
 	state *ret = malloc(sizeof(*ret));
-	__state_init(ret, id, out_default, edges);
+	state_init_exact(ret, id, out_default, edges);
 	return ret;
 }
 
 void state_init(state *this, edge_default *out_default, edge_list *edges)
 {
-	__state_init(this, 0, out_default, edges);
+	state_init_exact(this, 0, out_default, edges);
 }
 
-void __state_init(state *this, unsigned int id, edge_default *out_default, edge_list *edges)
+void state_init_exact(state *this, unsigned int id, edge_default *out_default, edge_list *edges)
 {
 	this->id = id;
 	this->out_default = out_default;
@@ -50,7 +50,7 @@ state *state_copy(state *this)
 {
 	if (!this)
 		return NULL;
-	return __state_new(this->id, this->out_default, edge_list_copy(this->edges));
+	return state_new_exact(this->id, this->out_default, edge_list_copy(this->edges));
 }
 
 /**

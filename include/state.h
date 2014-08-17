@@ -37,9 +37,9 @@ struct state {
 };
 
 state *state_new(edge_default *out_default);
-state *__state_new(unsigned int id, edge_default *out_default, edge_list *edges);
+state *state_new_exact(unsigned int id, edge_default *out_default, edge_list *edges);
 void state_init(state *this, edge_default *out_default, edge_list *edges);
-void __state_init(state *this, unsigned int id, edge_default *out_default, edge_list *edges);
+void state_init_exact(state *this, unsigned int id, edge_default *out_default, edge_list *edges);
 state *state_copy(state *this);
 void state_free(state *this);
 void state_print(state *this);

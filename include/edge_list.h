@@ -25,7 +25,7 @@ void edge_list_add_node(edge_list *this, edge *new);
 edge *edge_list_find_node(edge_list *this, unsigned int id);
 edge_list *edge_list_copy(edge_list *this);
 void edge_list_delete_node(edge_list *this, unsigned int id);
-void __edge_list_delete_node(edge_list *this, edge *del);
+void edge_list_delete_node_exact(edge_list *this, edge *del);
 void edge_list_free(edge_list *this);
 void edge_list_print(edge_list *this);
 

@@ -17,7 +17,6 @@ struct error {
 	const char *func;
 	int line;
 	const char *err_msg;
-	unsigned int id;
 };
 
 /**
@@ -26,8 +25,6 @@ struct error {
 
 */
 
-struct error *error_new(const char *file, const char *func, const int line, const char *err_msg);
-struct error *error_new_default(const char *file, const char *func, const int line, enum ERROR_TYPE type);
-void error_print(struct error *this);
+void __error_print(struct error *this);
 
 #endif

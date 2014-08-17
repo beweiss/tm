@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include "../include/tm.h"
+#include "../include/erring.h"
 
 void strlen_less_10_tm()
 {
@@ -32,7 +33,7 @@ void strlen_less_10_tm()
 
 	for (i = 0; i < 10; i++) {
 		if (!tm_add_edge(machine1, i, 10, tape_action_new(BLANK, i, STAT)))
-			printf("WAAAAAAAAAAAAAAAAAAAAAS???\n");	
+			printf("WTF???\n");	
 	}
 
 	state *check = tm_compute(machine1);
@@ -40,21 +41,23 @@ void strlen_less_10_tm()
 	if (check) {
 		printf("Jop\n");
 		if (check == machine1->accept) {
-			printf("JAAAAAAAAAAAAAA\n");
+			printf("Yeah\n");
 		}
 	}
 
 	tape_print(&machine1->tapes->tapes[0]);
 
-	tm_export_to_dot_file(machine1, "/home/benedikt/tm_short.dot");
+	tm_export_to_dot_file(machine1, "../tm_short.dot");
 	//tm_print(machine1);
 	tm_free(machine1);
 	word_free(word_one);
+
+	erring_print();
 }
 
 void add_mult_par_term_tm()
 {
-	unsigned int input[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+	/*unsigned int input[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
 	unsigned int tape[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 	unsigned int help[] = {1, 1, 2, 4, 2, 3, 4, 2, 3};
 	word *word_one = word_new(help, 9);
@@ -95,12 +98,14 @@ void add_mult_par_term_tm()
 	tm_export_to_dot_file(machine1, "/home/benedikt/tm_term.dot");
 	//tm_print(machine1);
 	tm_free(machine1);
-	word_free(word_one);
+	word_free(word_one);*/
+
+	
 }
 
 int main(int argc, char *argv[])
 {
-//	strlen_less_10_tm();
-	add_mult_par_term_tm();
+	strlen_less_10_tm();
+//	add_mult_par_term_tm();
 	return 0;
 }

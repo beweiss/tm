@@ -6,9 +6,9 @@
  * \brief Create new #tapes object
  * \return New #tapes object
  */
-tapes *tapes_new(unsigned int num, tape *first, ...)
+tapes *tapes_new(unsigned int length, tape *first, ...)
 {
-	if (num <= 0)
+	if (length <= 0)
 		return NULL;
 	if (!first)
 		return NULL;
@@ -18,19 +18,19 @@ tapes *tapes_new(unsigned int num, tape *first, ...)
 	unsigned int i = 0;
 
 	/* FIXME Add error handling */
-	ret->length = num;
+	ret->length = length;
 
-	/* Initializing arguments to store all values after num */
+	/* Initializing arguments to store all values after length */
 	va_start(arguments, first);
 
-	if (num > 1) {
-		ret->data = malloc(sizeof(tape) * num);
+	if (length > 1) {
+		ret->data = malloc(sizeof(tape) * length);
 	} else {
 		ret->data = first;
 		goto END;
 	}
 
-	for (i = 0; i < num; i++) {
+	for (i = 0; i < length; i++) {
 		ret->data[i] = *va_arg(arguments, tape*);
 	}
 END:	va_end(arguments);

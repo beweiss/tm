@@ -8,13 +8,13 @@
  * \param array tape_actions::actions
  * \return New #tape_actions object
  */
-tape_actions *tape_actions_new(unsigned int length, tape_action *array)
+tape_actions *tape_actions_new(unsigned int length, tape_action *data)
 {
 	/* FIXME Add error handling */
 	tape_actions *ret = malloc(sizeof(*ret));
 
 	ret->length = length;
-	ret->actions = array;
+	ret->data = data;
 	return ret;
 }
 
@@ -32,7 +32,7 @@ tape_actions *tape_actions_copy(tape_actions *this)
  */
 void tape_actions_free(tape_actions *this)
 {
-	free(this->actions);
+	free(this->data);
 	free(this);
 }
 
@@ -44,6 +44,6 @@ void tape_actions_print(tape_actions *this)
 	unsigned int i = 0;
 
 	for (i = 0; i < this->length; i++) {
-		tape_action_print(&this->actions[i]);
+		tape_action_print(&this->data[i]);
 	}
 }

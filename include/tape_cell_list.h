@@ -22,7 +22,7 @@
  */
 struct tape_cell_list {
 	struct tape_cell *head;
-	struct tape_cell *last;
+	struct tape_cell *tail;
 	unsigned int size;
 };
 

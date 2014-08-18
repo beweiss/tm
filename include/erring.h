@@ -3,8 +3,9 @@
 
 #include "../include/error.h"
 
-#define erring_add(err_msg) __erring_add_long(__FILE__, __func__, __LINE__, (err_msg))
-#define erring_add_default(type) __erring_add_long_default(__FILE__, __func__, __LINE__, (type))
+//FIXME would be perfect, if I can check if err_msg is a String literal
+//#define erring_add(err_msg) erring_add_long(__FILE__, __func__, __LINE__, (err_msg))
+#define erring_add_default(type) erring_add_long_default(__FILE__, __func__, __LINE__, (type))
 
 /**
  * \struct tm_erring

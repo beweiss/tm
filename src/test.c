@@ -6,6 +6,7 @@
 #include <fcntl.h>
 #include "../include/tm.h"
 #include "../include/erring.h"
+#include <time.h>
 
 void strlen_less_10_tm()
 {
@@ -106,6 +107,12 @@ void add_mult_par_term_tm()
 int main(int argc, char *argv[])
 {
 	strlen_less_10_tm();
-//	add_mult_par_term_tm();
+//	add_mult_par_term_
+
+	erring_add_default(E_NULL);
+
+	erring_print();
+
+
 	return 0;
 }

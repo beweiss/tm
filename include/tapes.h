@@ -15,7 +15,7 @@
  * Length of the array
  */
 typedef struct {
-	tape *tapes;
+	tape *data;
 	unsigned int length;
 } tapes;
 

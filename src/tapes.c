@@ -24,14 +24,14 @@ tapes *tapes_new(unsigned int num, tape *first, ...)
 	va_start(arguments, first);
 
 	if (num > 1) {
-		ret->tapes = malloc(sizeof(tape) * num);
+		ret->data = malloc(sizeof(tape) * num);
 	} else {
-		ret->tapes = first;
+		ret->data = first;
 		goto END;
 	}
 
 	for (i = 0; i < num; i++) {
-		ret->tapes[i] = *va_arg(arguments, tape*);
+		ret->data[i] = *va_arg(arguments, tape*);
 	}
 END:	va_end(arguments);
 	return ret;
@@ -50,17 +50,17 @@ tapes *tapes_copy(tapes *this)
 
 	//FIXME add error handling
 	if (num > 1) {
-		ret->tapes = malloc(sizeof(tape) * num);
+		ret->data = malloc(sizeof(tape) * num);
 	}
 	else {
-		ret->tapes = tape_copy(&this->tapes[0]);
+		ret->data = tape_copy(&this->data[0]);
 		ret->length = num;
 		return ret;
 	}
 
 	ret->length = num;
 	for (i = 0; i < num; i++) {
-		ret->tapes[i] = *tape_copy(&this->tapes[i]);
+		ret->data[i] = *tape_copy(&this->data[i]);
 	}
 	return ret;
 }
@@ -77,7 +77,7 @@ bool tapes_apply_actions(tapes *this, tape_actions *actions)
 	unsigned int i = 0;
 
 	for (i = 0; i < this->length; i++) {
-		if (!tape_apply_action(&this->tapes[i], &actions->actions[i]))
+		if (!tape_apply_action(&this->data[i], &actions->data[i]))
 			return false;
 	}
 	return true;
@@ -88,7 +88,7 @@ void tapes_apply_default_action(tapes *this, edge_default *action)
 	unsigned int i = 0;
 
 	for (i = 0; i < this->length; i++) {
-		tape_apply_default_action(&this->tapes[i], action);
+		tape_apply_default_action(&this->data[i], action);
 	}
 }
 
@@ -100,8 +100,8 @@ void tapes_free(tapes *this)
 	unsigned int i = 0;
 
 	for (i = 0; i < this->length; i++)
-		tape_free(&this->tapes[i]);
-	free(this->tapes);
+		tape_free(&this->data[i]);
+	free(this->data);
 	free(this);
 }
 
@@ -113,5 +113,5 @@ void tapes_print(tapes *this)
 	unsigned int i = 0;
 
 	for (i = 0; i < this->length; i++)
-		tape_print(&this->tapes[i]);
+		tape_print(&this->data[i]);
 }

@@ -64,7 +64,6 @@ void erring_print()
 		if (iter == (erring.data + erring.size_max))
 			iter = erring.data;
 	} while (iter != erring.tail);
-	printf("\n");
 }
 
 static void __erring_add(struct error *new)

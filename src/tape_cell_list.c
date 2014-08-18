@@ -13,7 +13,7 @@ struct tape_cell_list *tape_cell_list_new()
 	struct tape_cell_list *ret = malloc(sizeof(*ret));
 
 	ret->head = NULL;
-	ret->last = NULL;
+	ret->tail = NULL;
 	ret->size = 0;
 	return ret;
 }
@@ -35,13 +35,13 @@ void tape_cell_list_add_node(struct tape_cell_list *this, struct tape_cell *new)
 
 	if (!this->head) {
 		this->head = new;
-		this->last = this->head;
+		this->tail = this->head;
 		this->size = this->size + 1;
 		return;
 	}
-	new->prev = this->last;
-	this->last->next = new;
-	this->last = new;
+	new->prev = this->tail;
+	this->tail->next = new;
+	this->tail = new;
 	this->size = this->size + 1;
 }
 
@@ -88,14 +88,14 @@ void tape_cell_list_add_node_after(struct tape_cell_list *this, struct tape_cell
 	new->prev = after;
 	if (after == this->head) {
 		this->head->next = new;
-		if (this->head == this->last)
-			this->last = this->last->next;
+		if (this->head == this->tail)
+			this->tail = this->tail->next;
 		this->size = this->size + 1;
 		return;
 	}
-	if (after == this->last) {
+	if (after == this->tail) {
 		after->next = new;
-		this->last = new;
+		this->tail = new;
 		this->size = this->size + 1;
 		return;
 	}

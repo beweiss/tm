@@ -13,11 +13,11 @@
  * Length of the array
  */
 typedef struct {
-	tape_action *actions;
+	tape_action *data;
 	unsigned int length;
 } tape_actions;
 
-tape_actions *tape_actions_new(unsigned int length, tape_action *array);
+tape_actions *tape_actions_new(unsigned int length, tape_action *data);
 tape_actions *tape_actions_copy(tape_actions *this);
 void tape_actions_free(tape_actions *this);
 void tape_actions_print(tape_actions *this);

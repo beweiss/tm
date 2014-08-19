@@ -3,9 +3,9 @@
 
 #include "../include/error.h"
 
-//FIXME would be perfect, if I can check if err_msg is a String literal
-//#define erring_add(err_msg) erring_add_long(__FILE__, __func__, __LINE__, (err_msg))
-#define erring_add_default(type) erring_add_long_default(__FILE__, __func__, __LINE__, (type))
+#define E_NULL "Argument is NULL"
+
+#define erring_add(err_msg) erring_add_long(__FILE__, __func__, __LINE__, (err_msg))
 
 /**
  * \struct tm_erring
@@ -28,7 +28,6 @@ struct erring {
 
 void erring_init(unsigned int size_max);
 void erring_add_long(const char *file, const char *func, const int line, const char *err_msg);
-void erring_add_long_default(const char *file, const char *func, const int line, enum ERROR_TYPE type);
 void erring_free();
 void erring_print();
 

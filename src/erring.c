@@ -10,6 +10,8 @@ static void __erring_add(struct error *new);
 
 struct erring erring;
 
+struct erring *__erring = &erring;
+
 void erring_init(unsigned int size_max)
 {
 	erring.size_max = size_max;
@@ -27,18 +29,6 @@ void erring_init(unsigned int size_max)
 void erring_add_long(const char *file, const char *func, const int line, const char *err_msg)
 {
 	struct error x = {file, func, line, err_msg};
-
-	__erring_add(&x);
-}
-
-void erring_add_long_default(const char *file, const char *func, const int line, enum ERROR_TYPE type)
-{
-	if (type >= ERR_MSG_NUM)
-		return;
-	if (type < 0)
-		return;
-
-	struct error x = {file, func, line, ERROR_MSG_LOOKUP[type]};
 
 	__erring_add(&x);
 }

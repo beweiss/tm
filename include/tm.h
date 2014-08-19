@@ -41,11 +41,13 @@ tm_compute_step_reverse(tm *this) - recovers the last transition...
 
 
 //FIXME also mention the "More than one tape"-story in this documentation...
-/*TODO IMPLEMENT:
+TODO IMPLEMENT:
 
 		void tape_apply_action(tape *this, tape_action *action);
  FIXME current dummy edges....to reject
+
 */
+
 
 /**
  * \struct tm

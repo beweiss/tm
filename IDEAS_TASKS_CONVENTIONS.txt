@@ -2,7 +2,6 @@
 - forking of turing machine? - COW tape (only cell copy)
 - better distinction between data and state of tm?
 - subroutine / concat als uebergang
-- better names man! data in array class
 - no alphabet, _just_ uintptr_t and check() and is_blank()
 - add WRITE_NOTHING member to edge_default
 - tape_new_empty() should be possible!!!

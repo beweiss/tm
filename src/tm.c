@@ -43,7 +43,7 @@ tm *tm_new(tapes *tapes, alphabet *alph_input, alphabet *alph_tape)
 		return NULL;
 	if (!alphabet_contains(alph_tape, BLANK))
 		return NULL;
-	if (!tape_is_descended_from(&tapes->tapes[0], alph_input))
+	if (!tape_is_descended_from(&tapes->data[0], alph_input))
 		return NULL;
 	/* FIXME Add error handling */
 	tm *ret = malloc(sizeof(*ret));
@@ -234,7 +234,7 @@ static state *__tm_compute(tm *this, state *current)
 	edge *iter = NULL;
 	state *implicit = NULL;
 
-	tape_print(&this->tapes->tapes[0]);
+	tape_print(&this->tapes->data[0]);
 
 	//search for explicit edge
 	S_FOR_EACH_ENTRY(current->edges->head, iter) {
@@ -370,13 +370,13 @@ void tm_export_to_dot_file(tm *this, char *path)
 
 				strncat(total, "[label = \"", strlen("[label = \""));
 			for (i = 0; i < edge_iter->actions->length; i++) {
-				sprintf(id, "%u", edge_iter->actions->actions[i].token_read);
+				sprintf(id, "%u", edge_iter->actions->data[i].token_read);
 				strncat(total, id, strlen(id));
 				strncat(total, ";", 1);
-				sprintf(id, "%u", edge_iter->actions->actions[i].token_write);
+				sprintf(id, "%u", edge_iter->actions->data[i].token_write);
 				strncat(total, id, strlen(id));
 				strncat(total, ",", 1);
-				switch (edge_iter->actions->actions[i].dir) {
+				switch (edge_iter->actions->data[i].dir) {
 					case STAT:
 							strncat(total, "S", strlen("S"));
 							break;
@@ -457,7 +457,7 @@ tape *tm_select_tape(tm *this, unsigned int index)
 		return NULL;
 	if (index >= this->tapes->length || index < 0)
 		return NULL;
-	return &this->tapes->tapes[index];
+	return &this->tapes->data[index];
 }
 
 /**

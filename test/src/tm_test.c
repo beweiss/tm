@@ -4,8 +4,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include "../include/tm.h"
-#include "../include/erring.h"
+#include "../../include/tm.h"
+#include "../../include/erring.h"
 #include <time.h>
 
 void strlen_less_10_tm()
@@ -46,7 +46,7 @@ void strlen_less_10_tm()
 		}
 	}
 
-	tape_print(&machine1->tapes->tapes[0]);
+	tape_print(&machine1->tapes->data[0]);
 
 	tm_export_to_dot_file(machine1, "../tm_short.dot");
 	//tm_print(machine1);
@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
 	strlen_less_10_tm();
 //	add_mult_par_term_
 
-	erring_add_default(E_NULL);
+	erring_add(E_NULL);
 
 	erring_print();
 

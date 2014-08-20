@@ -92,8 +92,7 @@ typedef struct {
 
 	bool (*is_in_alph)(uintptr_t);
 	//TODO 
-	//function pointer to check()
-	//function pointer to is_blank()????
+	//bool (*is_blank)(uintptr_t);
 
 	tm_cur_state *current;
 } tm;

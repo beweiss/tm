@@ -35,6 +35,10 @@ tm *tm_new(tapes *tapes, bool (*is_in_alph)(uintptr_t))
 		erring_add(E_NULL);
 		return NULL;
 	}
+	if (!is_in_alph) {
+		erring_add(E_NULL);
+		return NULL;
+	}
 	tm *ret = malloc(sizeof(*ret));
 
 	if (!ret) {

@@ -8,19 +8,12 @@
 #include "../../include/erring.h"
 #include <stdint.h>
 
-bool my_is_in_alph(uinptr_t)
-{
-	if (uinptr_t >= 0 && uinptr_t <= 20)
-		return true;
-	return false;
-}
-
 void strlen_less_10_tm()
 {
 	uintptr_t help[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5};
 	word *word_one = word_new(help, 12);
 	tapes *my_tapes = tapes_new(1, tape_new(word_one));
-	tm *machine1 = tm_new_with_states(my_tapes, my_is_in_alph, 10);
+	tm *machine1 = tm_new_with_states(my_tapes, 10);
 	uintptr_t *read_vector[] = {NULL};
 	uintptr_t *write_vector[] = {&help[0]};
 	SHIFT_DIR dirs[] = {RIGHT};
@@ -46,6 +39,13 @@ void strlen_less_10_tm()
 	tm_add_edge_to_accept(machine1, 9, tape_actions_new(1, write_vector, &helper[i], stand));
 
 	tm_print(machine1);
+
+	tapes_print(machine1->tapes);
+	tapes_apply_actions(machine1->tapes, tm_find_edge_inexact(machine1, 0, 1)->actions);
+	tapes_print(machine1->tapes);
+	tapes_apply_actions(machine1->tapes, tm_find_edge_inexact(machine1, 0, 1)->actions);
+	tapes_print(machine1->tapes);
+
 	tm_free(machine1);
 	word_free(word_one);
 	free(helper);

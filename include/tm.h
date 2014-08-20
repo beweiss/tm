@@ -90,15 +90,11 @@ typedef struct {
 	state_list *states;
 	tapes *tapes;
 
-	bool (*is_in_alph)(uintptr_t);
-	//TODO 
-	//bool (*is_blank)(uintptr_t);
-
 	tm_cur_state *current;
 } tm;
 
-tm *tm_new(tapes *tapes, bool (*is_in_alph)(uintptr_t));
-tm *tm_new_with_states(tapes *tapes, bool (*is_in_alph)(uintptr_t), unsigned int states_num);
+tm *tm_new(tapes *tapes);
+tm *tm_new_with_states(tapes *tapes, unsigned int states_num);
 void tm_add_state(tm *this);
 void tm_add_state_with_default(tm *this, edge *out_default);
 void tm_remove_state(tm *this, unsigned int id);

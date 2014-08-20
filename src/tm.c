@@ -29,13 +29,9 @@ static state *__tm_compute(tm *this, state *current);
  * \param alph_tape tm::alph_tape
  * \return New #tm object
  */
-tm *tm_new(tapes *tapes, bool (*is_in_alph)(uintptr_t))
+tm *tm_new(tapes *tapes)
 {
 	if (!tapes) {
-		erring_add(E_NULL);
-		return NULL;
-	}
-	if (!is_in_alph) {
 		erring_add(E_NULL);
 		return NULL;
 	}
@@ -45,7 +41,6 @@ tm *tm_new(tapes *tapes, bool (*is_in_alph)(uintptr_t))
 		erring_add(E_MALL);
 		return NULL;
 	}
-	ret->is_in_alph = is_in_alph;
 	ret->tapes = tapes;
 	ret->states = state_list_new();
 
@@ -57,9 +52,9 @@ tm *tm_new(tapes *tapes, bool (*is_in_alph)(uintptr_t))
 	return ret;
 }
 
-tm *tm_new_with_states(tapes *tapes, bool (*is_in_alph)(uintptr_t), unsigned int states_num)
+tm *tm_new_with_states(tapes *tapes, unsigned int states_num)
 {
-	tm *ret = tm_new(tapes, is_in_alph);
+	tm *ret = tm_new(tapes);
 	unsigned int i = 0;
 
 	if (!ret) {

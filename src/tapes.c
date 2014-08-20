@@ -122,15 +122,34 @@ tapes *tapes_copy(tapes *this)
  */
 bool tapes_apply_actions(tapes *this, tape_actions *actions)
 {
-	//FIXME IMPLEMENT!!!
-	/*unsigned int i = 0;
+	unsigned int i = 0;
+
+	if (!actions->vec_read)
+		goto WRITE;
 
 	for (i = 0; i < this->length; i++) {
-		if (!tape_apply_action(&this->data[i], &actions->data[i]))
+		if (!actions->vec_read[i])
+			continue;
+		if (this->data[i].pos->token != actions->vec_read[i][0])
 			return false;
 	}
-	return true;*/
-	return false;
+
+WRITE:	if (!actions->vec_write)
+		goto SHIFT;
+
+	for (i = 0; i < this->length; i++) {
+		if (!actions->vec_write[i])
+			continue;
+		this->data[i].pos->token = actions->vec_write[i][0];
+	}
+
+SHIFT:	if (!actions->vec_dirs)
+		goto END;
+
+	for (i = 0; i < this->length; i++) {
+		tape_shift_pos(&this->data[i], actions->vec_dirs[i]);
+	}
+END:	return true;
 }
 
 /**

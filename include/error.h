@@ -14,6 +14,7 @@ struct error {
 
 */
 
+void error_init(struct error *this, const char *file, const char *func, int line, const char *err_msg);
 void error_print(struct error *this);
 
 #endif

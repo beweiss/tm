@@ -52,8 +52,6 @@ void strlen_less_10_tm()
 	//tm_print(machine1);
 	tm_free(machine1);
 	word_free(word_one);
-
-	erring_print();
 }
 
 void add_mult_par_term_tm()
@@ -106,13 +104,8 @@ void add_mult_par_term_tm()
 
 int main(int argc, char *argv[])
 {
+	unsigned int x = 12345;
 	strlen_less_10_tm();
 //	add_mult_par_term_
-
-	erring_add(E_NULL);
-
-	erring_print();
-
-
 	return 0;
 }

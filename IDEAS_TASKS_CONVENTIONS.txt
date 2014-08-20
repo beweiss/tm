@@ -1,4 +1,35 @@
 - only logical accept and reject or physical accept and reject?
+	physical (!!!) accept and reject states in they should be in the list
+	because:
+		- it is a state like every other state and so the user can
+		  expect that this state has a real ID like all other states
+		  and so it is reachable like every other state in the state_list
+		  ACCEPT = 0; REJECT = 1
+		  => maybe state-member of edge-object should be a pointer and not an ID!
+			option 1: special pointers and real IDS then we could
+				  place the states also in the state list because
+				  the next (first real state) has to start with 2
+				  and this is confusing for the user!
+				  because accepting and rejecting state have no IDs
+				  but why??? they are states like every other state
+			option 2: special pointers and no real IDs, then we
+				  abuse the state object and cannot deal with
+				  IDs instead we have to use obscure things like
+				  ACCEPT and REJECT...these things would be ints
+				  and THEN you can create a fucking ID for them
+			option 3: no special pointers and no real IDs in statelist
+				  see above in option 2 (id problem)
+			option 4: no state-object for reject and accept means a special entry
+				  in the edge-object ONLY for the accepting and rejecting state!
+				  special entry in edge object but an extra entry
+				  just for 2 fucking states...mhm but many edges to them...
+				  but then ID-Problem...id_dest in edge would be abused (not set!!!)
+				  because there is no actual state and state pointer (target pointer)
+				  cannot solve this because there is no state object for accept and reject
+				  solution = set target state pointer in edge to NULL...and state_type is ACCEPT|REJECT
+				  and state pointer may not be NULL for NORMAL
+
+
 - forking of turing machine? - COW tape (only cell copy)
 - better distinction between data and state of tm?
 - subroutine / concat als uebergang
@@ -6,7 +37,6 @@
 - add WRITE_NOTHING member to edge_default
 - tape_new_empty() should be possible!!!
 - several tapes - not working - read as vector and not as distinct tokens!
-- assert!!!!
 - beautify includes
 
 grammar interpreter/parser on the base of this tm-project
@@ -27,10 +57,6 @@ general parser for cool stuff like own xml
  *		exampel_list_del_node(example_list *this, ...)
  *	8) Array-Classes: Array-Class of example is: examples with members "data" and "length"
  *	9) EVERY Class has a structname_free method!!!
-
-"In point six I prefer to use static and skip the module prefix, 
-so if gtk_widget_show() was a function with file scope it would 
-become simply widget_show() with static storage class added. "
 
 never only one underscore
 

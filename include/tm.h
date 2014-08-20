@@ -102,6 +102,8 @@ void tm_remove_state(tm *this, unsigned int id);
 state *tm_find_state(tm *this, unsigned int id);
 //FIXME maybe no variable arg list and ONE tape_actions
 edge *tm_add_edge(tm *this, unsigned int src, unsigned int dest, tape_action *action1, ...);
+//edge *tm_add_edge_to_accept(tm *this, unsigned int src, tape_action *action1, ...);
+//edge *tm_add_edge_to_reject(tm *this, unsigned int src, tape_action *action1, ...);
 tm *tm_copy(tm *this);
 state *tm_compute(tm *this);
 state *tm_compute_step(tm *this);

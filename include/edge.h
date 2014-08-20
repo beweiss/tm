@@ -22,6 +22,8 @@ typedef struct edge edge;
  */
 struct edge {
 	unsigned int id_dest;
+	//state *target; == NULL if
+	//enum STATE_TYPE is set to REJECT or ACCEPT
 	tape_actions *actions;
 	edge *next;
 };

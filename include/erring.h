@@ -3,9 +3,14 @@
 
 #include "../include/error.h"
 
-#define E_NULL "Argument is NULL"
+#define E_CRIT "CRITICAL "
 
-#define erring_add(err_msg) erring_add_long(__FILE__, __func__, __LINE__, (err_msg))
+#define E_NULL "ERROR: Argument is NULL"
+#define E_MALL "ERROR: Call to malloc() failed"
+
+#define CE_MALL E_CRIT E_MALL
+
+#define erring_add(err_msg, ...) erring_add_long(__FILE__, __func__, __LINE__, (err_msg), ##__VA_ARGS__)
 
 /**
  * \struct tm_erring
@@ -27,7 +32,7 @@ struct erring {
 };
 
 void erring_init(unsigned int size_max);
-void erring_add_long(const char *file, const char *func, const int line, const char *err_msg);
+void erring_add_long(const char *file, const char *func, const int line, const char *err_format, ...);
 void erring_free();
 void erring_print();
 

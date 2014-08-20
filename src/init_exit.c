@@ -25,5 +25,6 @@ void tm_init()
 __attribute__((destructor))
 void tm_exit()
 {
+	erring_print();
 	erring_free();
 }

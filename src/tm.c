@@ -53,8 +53,6 @@ tm *tm_new(tapes *tapes, alphabet *alph_input, alphabet *alph_tape)
 	ret->states = state_list_new();
 	ret->alph_input = alph_input;
 	ret->alph_tape = alph_tape;
-	ret->accept = NULL;
-	ret->reject = NULL;
 
 	return ret;
 }
@@ -71,40 +69,14 @@ tm *tm_new(tapes *tapes, alphabet *alph_input, alphabet *alph_tape)
  * \param type Type of the new state
  * \param out_default The ID of the default (implicit) target #state
  */
-void tm_add_state(tm *this, STATE_TYPE type, edge_default *out_default)
+void tm_add_state(tm *this, edge *out_default)
 {
 	state *new = NULL;
 
 	if (!this)
 		return;
-	if (!this->states->head) {
-		if (type != NORMAL)
-			return;
-	}
-	switch (type) {
-	case NORMAL:
-		new = state_new(out_default);
-		state_list_add_node(this->states, new);
-		break;
-	case ACCEPT:
-		if (this->accept)
-			return;
-		if (out_default)
-			return;
-		new = state_new(out_default);
-		this->accept = new;
-		state_list_add_node(this->states, new);
-		break;
-	case REJECT:
-		if (this->reject)
-			return;
-		if (out_default)
-			return;
-		new = state_new(out_default);
-		this->reject = new;
-		state_list_add_node(this->states, new);
-		break;
-	}
+	new = state_new(out_default);
+	state_list_add_node(this->states, new);
 }
 
 /**
@@ -147,11 +119,11 @@ state *tm_find_state(tm *this, unsigned int id)
 edge *tm_add_edge(tm *this, unsigned int src, unsigned int dest, tape_action *action1, ...)
 {
 	state *state_src = tm_find_state(this, src);
+	state *state_dest = tm_find_state(this, dest);
+
 	if (!state_src)
 		return NULL;
-	if (!tm_find_state(this, dest))
-		return NULL;
-	if (state_src == this->accept || state_src == this->reject)
+	if (!state_dest)
 		return NULL;
 	if (!action1)
 		return NULL;
@@ -194,7 +166,7 @@ edge *tm_add_edge(tm *this, unsigned int src, unsigned int dest, tape_action *ac
 
 	actions = tape_actions_new(num, action_array);
 
-	new_edge = edge_new(dest, actions);
+	new_edge = edge_new(state_dest, actions);
 
 	edge_list_add_node(state_src->edges, new_edge);
 CLEANUP:
@@ -216,8 +188,6 @@ state *tm_compute(tm *this)
 		return NULL;
 	if (!this->states->head)
 		return NULL;
-	if (!this->accept && !this->reject)
-		return NULL;
 	return __tm_compute(this, this->states->head);
 }
 
@@ -227,10 +197,9 @@ state *tm_compute(tm *this)
  */
 static state *__tm_compute(tm *this, state *current)
 {
-	if (current == this->accept)
-		return current;
-	if (current == this->reject)
-		return current;
+	//FIXME END CONDITION
+	/*if (!current)
+		return NULL;
 	edge *iter = NULL;
 	state *implicit = NULL;
 
@@ -250,7 +219,7 @@ static state *__tm_compute(tm *this, state *current)
 		tapes_apply_default_action(this->tapes, current->out_default);
 		return __tm_compute(this, implicit);
 	}
-	return NULL;
+	return NULL;*/
 }
 
 /**
@@ -290,7 +259,7 @@ tm *tm_copy(tm *this)
  */
 void tm_export_to_dot_file(tm *this, char *path)
 {
-	if (!this)
+	/*if (!this)
 		return;
 	if (!path)
 		return;
@@ -402,7 +371,7 @@ void tm_export_to_dot_file(tm *this, char *path)
 	fsync(fd);
 	close(fd);
 	free(id);
-	free(total);
+	free(total);*/
 }
 
 /**
@@ -440,7 +409,7 @@ edge *tm_find_edge_inexact(tm *this, unsigned int src, unsigned int dest)
 	if (!tmp)
 		return NULL;
 	S_FOR_EACH_ENTRY(tmp->edges->head, iter_edge) {
-		if (iter_edge->id_dest == dest)
+		if (iter_edge->target->id == dest)
 			return iter_edge;
 	}
 	return NULL;

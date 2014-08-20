@@ -28,6 +28,39 @@
 				  cannot solve this because there is no state object for accept and reject
 				  solution = set target state pointer in edge to NULL...and state_type is ACCEPT|REJECT
 				  and state pointer may not be NULL for NORMAL
+			REAL STATES because if we use logical states we have
+				to create a fucking function for everything like
+				tm_add_edge_default_accept tm_add_edge_default_reject
+				tm_add_edge_accept, tm_add_edge_reject
+
+
+no tape_action instead only tape_actions with arrays!!!
+
+brillant idea:
+
+	k: number of tapes
+
+	read anything; write something: NULL, V, {L, S, R}^k
+	read anything; write nothing: NULL, NULL, {L, S, R}^k
+	read something; write something: V, V, {L, S, R}^k
+	read something; write nothing: V, NULL, {L, S, R}^k
+
+	(r, w, {L, NULL, R})
+	(r, w, {L, NULL, R})
+	(r, w, {L, NULL, R})
+	(r, w, {L, NULL, R})
+	(r, w, {L, NULL, R})
+
+	if direction array == NULL then no movement on all tapes!
+	
+
+	only L and R and if it is NULL then S
+
+	tape_actions: 3 arrays (with k length) of pointers with same length
+
+	tape_action: 3 pointers to single elements
+
+	tape_actions: array of tape_action with k length
 
 
 - forking of turing machine? - COW tape (only cell copy)

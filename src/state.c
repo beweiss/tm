@@ -7,7 +7,7 @@
  * \param out_default The ID of the default (implicit) target #state
  * \return New #state object
  */
-state *state_new(edge_default *out_default)
+state *state_new(edge *out_default)
 {
 	return state_new_exact(0, out_default, edge_list_new());
 }
@@ -21,7 +21,7 @@ state *state_new(edge_default *out_default)
  * \param edges Outgoing edges in #edge_list of #state
  * \return New #state object
  */
-state *state_new_exact(unsigned int id, edge_default *out_default, edge_list *edges)
+state *state_new_exact(unsigned int id, edge *out_default, edge_list *edges)
 {
 	//FIXME add error handling
 	state *ret = malloc(sizeof(*ret));
@@ -29,12 +29,12 @@ state *state_new_exact(unsigned int id, edge_default *out_default, edge_list *ed
 	return ret;
 }
 
-void state_init(state *this, edge_default *out_default, edge_list *edges)
+void state_init(state *this, edge *out_default, edge_list *edges)
 {
 	state_init_exact(this, 0, out_default, edges);
 }
 
-void state_init_exact(state *this, unsigned int id, edge_default *out_default, edge_list *edges)
+void state_init_exact(state *this, unsigned int id, edge *out_default, edge_list *edges)
 {
 	this->id = id;
 	this->out_default = out_default;
@@ -59,7 +59,7 @@ state *state_copy(state *this)
 void state_free(state *this)
 {
 	edge_list_free(this->edges);
-	edge_default_free(this->out_default);
+	edge_free(this->out_default);
 	free(this);
 }
 
@@ -73,5 +73,5 @@ void state_print(state *this)
 	printf("State:\n\tID   : %u\n\tedge_list: \n", this->id);
 	edge_list_print(this->edges);
 	printf("\n\tdefault edges: \n");
-	edge_default_print(this->out_default);
+	edge_print(this->out_default);
 }

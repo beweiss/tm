@@ -105,7 +105,7 @@ void add_mult_par_term_tm()
 int main(int argc, char *argv[])
 {
 	unsigned int x = 12345;
-	strlen_less_10_tm();
+	//strlen_less_10_tm();
 //	add_mult_par_term_
 	return 0;
 }

@@ -1,9 +1,11 @@
 #ifndef EDGE_H_
 #define EDGE_H_
 
-#include "tape_actions.h"
-
 typedef struct edge edge;
+
+#include <stdbool.h>
+#include "state.h"
+#include "tape_actions.h"
 
 /**
  * \struct edge
@@ -21,15 +23,16 @@ typedef struct edge edge;
  * context of this class
  */
 struct edge {
-	unsigned int id_dest;
-	//state *target; == NULL if
-	//enum STATE_TYPE is set to REJECT or ACCEPT
+	state *target;
+	bool accept_reject; //if true then accept else reject
 	tape_actions *actions;
 	edge *next;
 };
 
-edge *edge_new(unsigned int id_dest, tape_actions *actions);
-void edge_init(edge *this, unsigned int id_dest, tape_actions *actions);
+edge *edge_new(state *target, tape_actions *actions);
+edge *edge_new_accept_reject(bool accept_reject, tape_actions *actions);
+int edge_init(edge *this, state *target, tape_actions *actions);
+void edge_init_accept_reject(edge *this, bool accept_reject, tape_actions *actions);
 edge *edge_copy(edge *this);
 void edge_free(edge *this);
 void edge_print(edge *this);

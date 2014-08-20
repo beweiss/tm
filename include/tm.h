@@ -90,14 +90,12 @@ typedef struct {
 	tapes *tapes;
 	alphabet *alph_input;
 	alphabet *alph_tape;
-	state *accept;
-	state *reject;
 
 	tm_cur_state *current;
 } tm;
 
 tm *tm_new(tapes *tapes, alphabet *alph_input, alphabet *alph_tape);
-void tm_add_state(tm *this, STATE_TYPE type, edge_default *out_default);
+void tm_add_state(tm *this, edge *out_default);
 void tm_remove_state(tm *this, unsigned int id);
 state *tm_find_state(tm *this, unsigned int id);
 //FIXME maybe no variable arg list and ONE tape_actions

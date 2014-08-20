@@ -1,6 +1,8 @@
 #ifndef EDGE_LIST_H_
 #define EDGE_LIST_H_
 
+typedef struct edge_list edge_list;
+
 #include "edge.h"
 
 /**
@@ -14,10 +16,10 @@
  * \var edge_list::size
  * Size of the list
  */
-typedef struct {
+struct edge_list {
 	edge *head;
 	unsigned int size;
-} edge_list;
+};
 
 edge_list *edge_list_new();
 void edge_list_init(edge_list *this);

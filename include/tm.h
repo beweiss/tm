@@ -90,6 +90,7 @@ typedef struct {
 	state_list *states;
 	tapes *tapes;
 
+	bool (*is_in_alph)(uintptr_t);
 	//TODO 
 	//function pointer to check()
 	//function pointer to is_blank()????
@@ -97,7 +98,7 @@ typedef struct {
 	tm_cur_state *current;
 } tm;
 
-tm *tm_new(tapes *tapes);
+tm *tm_new(tapes *tapes, bool (*is_in_alph)(uintptr_t));
 void tm_add_state(tm *this, edge *out_default);
 void tm_remove_state(tm *this, unsigned int id);
 state *tm_find_state(tm *this, unsigned int id);

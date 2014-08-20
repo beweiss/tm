@@ -6,17 +6,22 @@
 #include <fcntl.h>
 #include "../../include/tm.h"
 #include "../../include/erring.h"
-#include <time.h>
+#include <stdint.h>
+
+bool my_is_in_alph(uinptr_t)
+{
+	if (uinptr_t >= 0 && uinptr_t <= 20)
+		return true;
+	return false;
+}
 
 void strlen_less_10_tm()
 {
-	unsigned int input[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
-	unsigned int tape[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-	unsigned int help[] = {1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6};
-	word *word_one = word_new(help, 8);
-	tapes *my_tapes = tapes_new(1, tape_new(word_one, RDWR));
-	tm *machine1 = tm_new(my_tapes, alphabet_new(input, 9), alphabet_new(tape, 10));
-	unsigned int i = 0;
+	uintptr_t help[] = {1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6};
+	word *word_one = word_new(help, 12);
+	tapes *my_tapes = tapes_new(1, tape_new(word_one));
+	tm *machine1 = tm_new(my_tapes, my_is_in_alph);
+	/*unsigned int i = 0;
 	unsigned int j = 0;
 	unsigned int x = 0;
 
@@ -51,7 +56,7 @@ void strlen_less_10_tm()
 	tm_export_to_dot_file(machine1, "../tm_short.dot");
 	//tm_print(machine1);
 	tm_free(machine1);
-	word_free(word_one);
+	word_free(word_one);*/
 }
 
 void add_mult_par_term_tm()
@@ -105,7 +110,7 @@ void add_mult_par_term_tm()
 int main(int argc, char *argv[])
 {
 	unsigned int x = 12345;
-	//strlen_less_10_tm();
+	strlen_less_10_tm();
 //	add_mult_par_term_
 	return 0;
 }

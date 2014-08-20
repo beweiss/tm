@@ -29,7 +29,7 @@ static state *__tm_compute(tm *this, state *current);
  * \param alph_tape tm::alph_tape
  * \return New #tm object
  */
-tm *tm_new(tapes *tapes)
+tm *tm_new(tapes *tapes, bool (*is_in_alph)(uintptr_t))
 {
 	if (!tapes) {
 		erring_add(E_NULL);
@@ -41,6 +41,7 @@ tm *tm_new(tapes *tapes)
 		erring_add(E_MALL);
 		return NULL;
 	}
+	ret->is_in_alph = is_in_alph;
 	ret->tapes = tapes;
 	ret->states = state_list_new();
 
@@ -438,6 +439,8 @@ edge *tm_find_edge_inexact(tm *this, unsigned int src, unsigned int dest)
 	}
 	state *tmp = tm_find_state(this, src);
 	edge *iter_edge = NULL;
+
+	edge_list *x = tmp->edges;
 
 	if (!tmp) {
 		erring_add("ERROR: src Node is not in tm");

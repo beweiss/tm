@@ -1,0 +1,36 @@
+Turing Machine Project or short "tm"
+====================================
+
+tm is a shared library for Linux, which is capable to "represent"
+Turing Machines.
+
+There are a few differences between the theoretical construct and
+the implementation I wrote.
+
+In this implementation there are no "alphabets" (no input alphabet and no tape
+alphabet) and you can create multiple tapes.
+
+There is only *one* accepting state and *one* rejecting state.
+
+Furthermore you can define transitions more comfortably:
+	- read *anything* from one or more tapes
+	- write *nothing* to one or more tapes
+	- move in any direction on one or more tapes
+
+The following combinations are possible (for 1 tape):
+
+r = value which is read
+w = value which is written
+d = direction we move to - LEFT, RIGHT or STAT
+
+	(r0  , w0  , d0  ), //read r0, write w0, move in d0 
+	(NULL, w1  , d1  ), //read anything, write w1, move in d1
+	(NULL, NULL, d2  ), //read anything, write nothing, move in d2
+	(NULL, w3  , NULL), //read anything, write w3, do not move
+	(NULL, NULL, NULL), //read anything, write nothing, do not move
+	(r5  , NULL, d5  ), //read r5, write nothing, move in d5
+	(r6, , NULL, NULL), //read r6, write nothing, do not move
+	(r7  , w7  , NULL), //read r7, write w7, do not move
+
+	2 * 2 * 2 == 8
+

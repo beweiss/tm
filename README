@@ -2,7 +2,7 @@ Turing Machine Project or short "tm"
 ====================================
 
 tm is a shared library for Linux, which is capable to "represent"
-Turing Machines.
+deterministic Turing Machines and work with them.
 
 There are a few differences between the theoretical construct and
 the implementation I wrote.
@@ -11,11 +11,18 @@ In this implementation there are no "alphabets" (no input alphabet and no tape
 alphabet) and you can create multiple tapes.
 
 There is only *one* accepting state and *one* rejecting state.
+There is only *one* initial state - the first state.
+
+The blank-Symbol is fixed to the Value 0.
+It is not so much work to implement an user defined value but is it
+sensible to implement this?
+In my opinion it is nonsense because you can choose (2^64) - 1 other values so
+don't complain about that ;-)
 
 Furthermore you can define transitions more comfortably:
 	- read *anything* from one or more tapes
 	- write *nothing* to one or more tapes
-	- move in any direction on one or more tapes
+	- move to any direction on one or more tapes
 
 The following combinations are possible (for 1 tape):
 
@@ -23,14 +30,16 @@ r = value which is read
 w = value which is written
 d = direction we move to - LEFT, RIGHT or STAT
 
-	(r0  , w0  , d0  ), //read r0, write w0, move in d0 
-	(NULL, w1  , d1  ), //read anything, write w1, move in d1
-	(NULL, NULL, d2  ), //read anything, write nothing, move in d2
-	(NULL, w3  , NULL), //read anything, write w3, do not move
-	(NULL, NULL, NULL), //read anything, write nothing, do not move
-	(r5  , NULL, d5  ), //read r5, write nothing, move in d5
-	(r6, , NULL, NULL), //read r6, write nothing, do not move
-	(r7  , w7  , NULL), //read r7, write w7, do not move
+(r0  , w0  , d0  ), //read       r0, write w0     , move to d0 
+(NULL, w1  , d1  ), //read anything, write w1     , move to d1
+(NULL, NULL, d2  ), //read anything, write nothing, move to d2
+(NULL, w3  , NULL), //read anything, write w3     , do not move
+(NULL, NULL, NULL), //read anything, write nothing, do not move
+(r5  , NULL, d5  ), //read       r5, write nothing, move to d5
+(r6, , NULL, NULL), //read       r6, write nothing, do not move
+(r7  , w7  , NULL), //read       r7, write w7     , do not move
 
-	2 * 2 * 2 == 8
+2 * 2 * 2 == 8
+
+
 

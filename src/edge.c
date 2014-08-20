@@ -20,7 +20,7 @@ edge *edge_new(state *target, tape_actions *actions)
 		return NULL;
 	}
 	if (edge_init(ret, target, actions) == -1) {
-		erring_add(E_NULL ": target may not be NULL if target state is NORMAL");
+		erring_add(CALL_FAILED_TO(edge_init));
 		free(ret);
 		return NULL;
 	}

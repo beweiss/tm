@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "../include/tape_cell_list.h"
 #include "../include/singly_linked_list_macros.h"
+#include "../include/erring.h"
 
 /**
  * \brief Create new #tape_cell_list struct
@@ -11,6 +12,11 @@ struct tape_cell_list *tape_cell_list_new()
 {
 	//FIXME add error handling
 	struct tape_cell_list *ret = malloc(sizeof(*ret));
+
+	if (!ret) {
+		erring_add(E_MALL);
+		return NULL;
+	}
 
 	ret->head = NULL;
 	ret->tail = NULL;
@@ -24,15 +30,14 @@ struct tape_cell_list *tape_cell_list_new()
  */
 void tape_cell_list_add_node(struct tape_cell_list *this, struct tape_cell *new)
 {
-	/*if (!this->head) {
-		this->head = new;
+	if (!this) {
+		erring_add(E_NULL);
 		return;
 	}
-	new->next = this->head;
-	new->prev = this->head->prev;
-	new->prev->next = new;
-	this->head->prev = new;*/
-
+	if (!new) {
+		erring_add(E_NULL);
+		return;
+	}
 	if (!this->head) {
 		this->head = new;
 		this->tail = this->head;
@@ -52,12 +57,22 @@ void tape_cell_list_add_node(struct tape_cell_list *this, struct tape_cell *new)
  */
 void tape_cell_list_add_node_before(struct tape_cell_list *this, struct tape_cell *before, struct tape_cell *new)
 {
-	if (!this->head)
+	if (!this) {
+		erring_add(E_NULL);
 		return;
-	if (!new)
+	}
+	if (!new) {
+		erring_add(E_NULL);
 		return;
-	if (!before)
+	}
+	if (!before) {
+		erring_add(E_NULL);
 		return;
+	}
+	if (!this->head) {
+		erring_add("ERROR: Head may not be NULL in this function! (List is empty)");
+		return;
+	}
 	new->next = before;
 	new->prev = before->prev;
 	if (before == this->head) {
@@ -78,12 +93,22 @@ void tape_cell_list_add_node_before(struct tape_cell_list *this, struct tape_cel
  */
 void tape_cell_list_add_node_after(struct tape_cell_list *this, struct tape_cell *after, struct tape_cell *new)
 {
-	if (!this->head)
+	if (!this) {
+		erring_add(E_NULL);
 		return;
-	if (!new)
+	}
+	if (!new) {
+		erring_add(E_NULL);
 		return;
-	if (!after)
+	}
+	if (!after) {
+		erring_add(E_NULL);
 		return;
+	}
+	if (!this->head) {
+		erring_add("ERROR: Head may not be NULL in this function! (List is empty)");
+		return;
+	}
 	new->next = after->next;
 	new->prev = after;
 	if (after == this->head) {
@@ -110,12 +135,18 @@ void tape_cell_list_add_node_after(struct tape_cell_list *this, struct tape_cell
  */
 void tape_cell_list_delete_node(struct tape_cell_list *this, struct tape_cell *del)
 {
-	if (!this)
+	if (!this) {
+		erring_add(E_NULL);
 		return;
-	if (!this->head)
+	}
+	if (!this->head) {
+		erring_add("ERROR: Head may not be NULL in this function! (List is empty)");
 		return;
-	if (!del)
+	}
+	if (!del) {
+		erring_add(E_NULL);
 		return;
+	}
 	struct tape_cell *iter = container_of(&this->head, struct tape_cell, next);
 	struct tape_cell *prev = iter;
 
@@ -134,8 +165,17 @@ void tape_cell_list_delete_node(struct tape_cell_list *this, struct tape_cell *d
 
 struct tape_cell_list *tape_cell_list_copy(struct tape_cell_list *this)
 {
+	if (!this) {
+		erring_add(E_NULL);
+		return NULL;
+	}
 	struct tape_cell_list *ret = tape_cell_list_new();
 	struct tape_cell *iter_old = this->head;
+
+	if (!ret) {
+		erring_add(CALL_FAILED_TO(tape_cell_list_new));
+		return NULL;
+	}
 
 	while (iter_old) {
 		tape_cell_list_add_node(ret, tape_cell_copy(iter_old));
@@ -149,6 +189,10 @@ struct tape_cell_list *tape_cell_list_copy(struct tape_cell_list *this)
  */
 void tape_cell_list_free(struct tape_cell_list *this)
 {
+	if (!this) {
+		erring_add(E_NULL);
+		return;
+	}
 	while (this->head)
 		tape_cell_list_delete_node(this, this->head);
 	free(this);
@@ -158,6 +202,10 @@ void tape_cell_list_print(struct tape_cell_list *this, struct tape_cell *highlig
 {
 	struct tape_cell *iter = NULL;
 
+	if (!this) {
+		erring_add(E_NULL);
+		return;
+	}
 	S_FOR_EACH_ENTRY(this->head, iter) {
 		if (iter == highlight) {
 			printf("[->%u<-]", iter->token);

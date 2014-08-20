@@ -10,6 +10,8 @@
 
 #define CE_MALL E_CRIT E_MALL
 
+#define CALL_FAILED_TO(function) "ERROR: Call to " #function " failed"
+
 #define erring_add(err_msg, ...) erring_add_long(__FILE__, __func__, __LINE__, (err_msg), ##__VA_ARGS__)
 
 /**

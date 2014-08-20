@@ -6,6 +6,7 @@
 #include "tapes.h"
 #include "state_list.h"
 #include "constants.h"
+#include "word.h"
 
 typedef struct {
 	state *state_cur; //shallow copy on tm_cur_state_copy()
@@ -88,18 +89,20 @@ TODO IMPLEMENT:
 typedef struct {
 	state_list *states;
 	tapes *tapes;
-	alphabet *alph_input;
-	alphabet *alph_tape;
+
+	//TODO 
+	//function pointer to check()
+	//function pointer to is_blank()????
 
 	tm_cur_state *current;
 } tm;
 
-tm *tm_new(tapes *tapes, alphabet *alph_input, alphabet *alph_tape);
+tm *tm_new(tapes *tapes);
 void tm_add_state(tm *this, edge *out_default);
 void tm_remove_state(tm *this, unsigned int id);
 state *tm_find_state(tm *this, unsigned int id);
 //FIXME maybe no variable arg list and ONE tape_actions
-edge *tm_add_edge(tm *this, unsigned int src, unsigned int dest, tape_action *action1, ...);
+edge *tm_add_edge(tm *this, unsigned int src, unsigned int dest, tape_actions *actions);
 //edge *tm_add_edge_to_accept(tm *this, unsigned int src, tape_action *action1, ...);
 //edge *tm_add_edge_to_reject(tm *this, unsigned int src, tape_action *action1, ...);
 tm *tm_copy(tm *this);
@@ -110,7 +113,7 @@ state *tm_compute_step(tm *this);
 word *tm_gen_accepted_word(tm *this);
 
 void tm_export_to_dot_file(tm *this, char *path);
-edge *tm_find_edge(tm *this, unsigned int src, unsigned int dest, unsigned int token);
+edge *tm_find_edge(tm *this, unsigned int src, unsigned int dest, uintptr_t token);
 edge *tm_find_edge_inexact(tm *this, unsigned int src, unsigned int dest);
 tape *tm_select_tape(tm *this, unsigned int index);
 void tm_free(tm *this);

@@ -1,19 +1,25 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include "../include/word.h"
+#include "../include/erring.h"
 
 /**
  * \brief Create new #word object
  * \return New #word object
  */
-word *word_new(unsigned int *letters, unsigned int length)
+word *word_new(uintptr_t *letters, unsigned int length)
 {
-	/* FIXME Add error handling */
 	word *ret = malloc(sizeof(*ret));
+
+	if (!ret) {
+		erring_add(E_MALL);
+		return NULL;
+	}
 	word_init(ret, letters, length);
 	return ret;
 }
 
-void word_init(word *this, unsigned int *letters, unsigned int length)
+void word_init(word *this, uintptr_t *letters, unsigned int length)
 {
 	this->letters = letters;
 	this->length = length;
@@ -36,7 +42,7 @@ word *word_concat(word *this, word *obj)
  */
 void word_free(word *this)
 {
-	alphabet_free(this);
+	free(this);
 }
 
 /**
@@ -47,5 +53,10 @@ void word_free(word *this)
  */
 void word_print(word *this)
 {
-	alphabet_print(this);
+	unsigned int i = 0;
+
+	printf("{");
+	for (i = 0; i < this->length - 1; i++)
+		printf("%p, ", this->letters[i]);
+	printf("%p}\n", this->letters[i]);
 }

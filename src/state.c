@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../include/state.h"
+#include "../include/erring.h"
 
 /**
  * \brief Create new #state object
@@ -9,7 +10,13 @@
  */
 state *state_new(edge *out_default)
 {
-	return state_new_exact(0, out_default, edge_list_new());
+	state *ret = state_new_exact(0, out_default, edge_list_new());
+
+	if (!ret) {
+		erring_add(CALL_FAILED_TO(state_new_exact));
+		return NULL;
+	}
+	return ret;
 }
 
 /**
@@ -25,6 +32,11 @@ state *state_new_exact(unsigned int id, edge *out_default, edge_list *edges)
 {
 	//FIXME add error handling
 	state *ret = malloc(sizeof(*ret));
+
+	if (!ret) {
+		erring_add(E_MALL);
+		return NULL;
+	}
 	state_init_exact(ret, id, out_default, edges);
 	return ret;
 }
@@ -36,6 +48,10 @@ void state_init(state *this, edge *out_default, edge_list *edges)
 
 void state_init_exact(state *this, unsigned int id, edge *out_default, edge_list *edges)
 {
+	if (!this) {
+		erring_add(E_NULL);
+		return;
+	}
 	this->id = id;
 	this->out_default = out_default;
 	this->edges = edges;
@@ -48,9 +64,17 @@ void state_init_exact(state *this, unsigned int id, edge *out_default, edge_list
  */
 state *state_copy(state *this)
 {
-	if (!this)
+	if (!this) {
+		erring_add(E_NULL);
 		return NULL;
-	return state_new_exact(this->id, this->out_default, edge_list_copy(this->edges));
+	}
+	state *ret = state_new_exact(this->id, this->out_default, edge_list_copy(this->edges));
+
+	if (!ret) {
+		erring_add(CALL_FAILED_TO(state_new_exact));
+		return NULL;
+	}
+	return ret;
 }
 
 /**
@@ -58,6 +82,10 @@ state *state_copy(state *this)
  */
 void state_free(state *this)
 {
+	if (!this) {
+		erring_add(E_NULL);
+		return;
+	}
 	edge_list_free(this->edges);
 	edge_free(this->out_default);
 	free(this);
@@ -68,8 +96,10 @@ void state_free(state *this)
  */
 void state_print(state *this)
 {
-	if (!this)
+	if (!this) {
+		erring_add(E_NULL);
 		return;
+	}
 	printf("State:\n\tID   : %u\n\tedge_list: \n", this->id);
 	edge_list_print(this->edges);
 	printf("\n\tdefault edges: \n");

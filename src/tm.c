@@ -8,8 +8,8 @@
 #include <fcntl.h>
 #include "../include/singly_linked_list_macros.h"
 #include "../include/constants.h"
-#include "../include/alphabet.h"
 #include "../include/tm.h"
+#include "../include/erring.h"
 
 static state *__tm_compute(tm *this, state *current);
 
@@ -29,31 +29,25 @@ static state *__tm_compute(tm *this, state *current);
  * \param alph_tape tm::alph_tape
  * \return New #tm object
  */
-tm *tm_new(tapes *tapes, alphabet *alph_input, alphabet *alph_tape)
+tm *tm_new(tapes *tapes)
 {
-	if (!tapes)
+	if (!tapes) {
+		erring_add(E_NULL);
 		return NULL;
-	if (!alph_input)
-		return NULL;
-	if (!alph_tape)
-		return NULL;
-	if (!alphabet_is_subset(alph_input, alph_tape))
-		return NULL;
-	if (alphabet_contains(alph_input, BLANK))
-		return NULL;
-	if (!alphabet_contains(alph_tape, BLANK))
-		return NULL;
-	if (!tape_is_descended_from(&tapes->data[0], alph_input))
-		return NULL;
-	/* FIXME Add error handling */
+	}
 	tm *ret = malloc(sizeof(*ret));
 
+	if (!ret) {
+		erring_add(E_MALL);
+		return NULL;
+	}
 	ret->tapes = tapes;
-	//FIXME add error handling
 	ret->states = state_list_new();
-	ret->alph_input = alph_input;
-	ret->alph_tape = alph_tape;
 
+	if (!(ret->states)) {
+		erring_add(CALL_FAILED_TO(state_list_new));
+		return NULL;
+	}
 	return ret;
 }
 
@@ -73,9 +67,16 @@ void tm_add_state(tm *this, edge *out_default)
 {
 	state *new = NULL;
 
-	if (!this)
+	if (!this) {
+		erring_add(E_NULL);
 		return;
+	}
 	new = state_new(out_default);
+
+	if (!new) {
+		erring_add(CALL_FAILED_TO(state_new));
+		return;
+	}
 	state_list_add_node(this->states, new);
 }
 
@@ -85,8 +86,10 @@ void tm_add_state(tm *this, edge *out_default)
  */
 void tm_remove_state(tm *this, unsigned int id)
 {
-	if (!this)
+	if (!this) {
+		erring_add(E_NULL);
 		return;
+	}
 	//state_list_remove_node(this->states, id);
 }
 
@@ -96,8 +99,10 @@ void tm_remove_state(tm *this, unsigned int id)
  */
 state *tm_find_state(tm *this, unsigned int id)
 {
-	if (!this)
-		return NULL;
+	if (!this) {
+		erring_add(E_NULL);
+		return;
+	}
 	return state_list_find_node(this->states, id);
 }
 
@@ -116,24 +121,40 @@ state *tm_find_state(tm *this, unsigned int id)
  * \param action1 First #tape_action object
  * \param ... tm::tapes::length - 1 #tape_action objects will follow
  */
-edge *tm_add_edge(tm *this, unsigned int src, unsigned int dest, tape_action *action1, ...)
+edge *tm_add_edge(tm *this, unsigned int src, unsigned int dest, tape_actions *actions)
 {
 	state *state_src = tm_find_state(this, src);
 	state *state_dest = tm_find_state(this, dest);
+	edge *new_edge = NULL;
 
-	if (!state_src)
+	if (!this) {
+		erring_add(E_NULL);
 		return NULL;
-	if (!state_dest)
+	}
+	if (!actions) {
+		erring_add(E_NULL);
 		return NULL;
-	if (!action1)
+	}
+	if (!state_src) {
+		erring_add("ERROR: src Node does not exist in tm");
 		return NULL;
-	if (!alphabet_contains(this->alph_tape, action1->token_read))
+	}
+	if (!state_dest) {
+		erring_add("ERROR: dest Node does not exist in tm");
 		return NULL;
-	if (!alphabet_contains(this->alph_tape, action1->token_write))
+	}
+
+	new_edge = edge_new(state_dest, actions);
+
+	if (!new_edge) {
+		erring_add(CALL_FAILED_TO(edge_new));
 		return NULL;
-	va_list arguments;
+	}
+	edge_list_add_node(state_src->edges, new_edge);
+	return new_edge;
+
+	/*va_list arguments;
 	unsigned int num = this->tapes->length;
-	/* FIXME Add error handling */
 	tape_action *action_array = NULL;
 	tape_actions *actions = NULL;
 	tape_action *check = NULL;
@@ -171,7 +192,7 @@ edge *tm_add_edge(tm *this, unsigned int src, unsigned int dest, tape_action *ac
 	edge_list_add_node(state_src->edges, new_edge);
 CLEANUP:
 	va_end(arguments);
-	return new_edge;
+	return new_edge;*/
 }
 
 /**
@@ -184,11 +205,11 @@ CLEANUP:
  */
 state *tm_compute(tm *this)
 {
-	if (!this)
+	/*if (!this)
 		return NULL;
 	if (!this->states->head)
 		return NULL;
-	return __tm_compute(this, this->states->head);
+	return __tm_compute(this, this->states->head);*/
 }
 
 /**
@@ -228,9 +249,9 @@ static state *__tm_compute(tm *this, state *current)
  */
 word *tm_gen_accepted_word(tm *this)
 {
-	if (!this)
+	/*if (!this)
 		return NULL;
-	return NULL;
+	return NULL;*/
 }
 
 /**
@@ -239,17 +260,27 @@ word *tm_gen_accepted_word(tm *this)
  */
 tm *tm_copy(tm *this)
 {
-	if (!this)
+	if (!this) {
+		erring_add(E_NULL);
 		return NULL;
-	/* FIXME Add error handling */
+	}
 	tm *ret = malloc(sizeof(*ret));
 
-	//ret->is_det = this->is_det;
+	if (!ret) {
+		erring_add(E_MALL);
+		return NULL;
+	}
 	ret->states = state_list_copy(this->states);
-	ret->tapes = tapes_copy(this->tapes);
-	ret->alph_input = alphabet_copy(this->alph_input);
-	ret->alph_tape = alphabet_copy(this->alph_tape);
+	if (!(ret->states)) {
+		erring_add(CALL_FAILED_TO(state_list_copy));
+		return NULL;
+	}
 
+	ret->tapes = tapes_copy(this->tapes);
+	if (!(ret->tapes)) {
+		erring_add(CALL_FAILED_TO(tapes_copy));
+		return NULL;
+	}
 	return ret;
 }
 
@@ -381,12 +412,12 @@ void tm_export_to_dot_file(tm *this, char *path)
  * \param token Token of the wanted edge
  * \return The specific #edge object or NULL if it was not found
  */
-edge *tm_find_edge(tm *this, unsigned int src, unsigned int dest, unsigned int token)
+edge *tm_find_edge(tm *this, unsigned int src, unsigned int dest, uintptr_t token)
 {
 	//FIXME maybe bullshit
-	if (!this)
+	/*if (!this)
 		return NULL;
-	return NULL;
+	return NULL;*/
 }
 
 /**
@@ -401,13 +432,17 @@ edge *tm_find_edge(tm *this, unsigned int src, unsigned int dest, unsigned int t
  */
 edge *tm_find_edge_inexact(tm *this, unsigned int src, unsigned int dest)
 {
-	if (!this)
+	if (!this) {
+		erring_add(E_NULL);
 		return NULL;
+	}
 	state *tmp = tm_find_state(this, src);
 	edge *iter_edge = NULL;
 
-	if (!tmp)
+	if (!tmp) {
+		erring_add("ERROR: src Node is not in tm");
 		return NULL;
+	}
 	S_FOR_EACH_ENTRY(tmp->edges->head, iter_edge) {
 		if (iter_edge->target->id == dest)
 			return iter_edge;
@@ -422,10 +457,14 @@ edge *tm_find_edge_inexact(tm *this, unsigned int src, unsigned int dest)
  */
 tape *tm_select_tape(tm *this, unsigned int index)
 {
-	if (!this)
+	if (!this) {
+		erring_add(E_NULL);
 		return NULL;
-	if (index >= this->tapes->length || index < 0)
+	}
+	if (index >= this->tapes->length) {
+		erring_add("ERROR: Invalid Index %u - maximum Index is %u", index, this->tapes->length);
 		return NULL;
+	}
 	return &this->tapes->data[index];
 }
 
@@ -434,12 +473,12 @@ tape *tm_select_tape(tm *this, unsigned int index)
  */
 void tm_free(tm *this)
 {
-	if (!this)
+	if (!this) {
+		erring_add(E_NULL);
 		return;
+	}
 	state_list_free(this->states);
 	tapes_free(this->tapes);
-	alphabet_free(this->alph_input);
-	alphabet_free(this->alph_tape);
 	free(this);
 }
 
@@ -448,14 +487,11 @@ void tm_free(tm *this)
  */
 void tm_print(tm *this)
 {
-	/* FIXME Add error handling */
-	if (!this)
-		return;
+	if (!this) {
+		erring_add(E_NULL);
+		return NULL;
+	}
 	printf("TURING MACHINE\n");
-	printf("INPUT ALPHABET\n\t");
-	alphabet_print(this->alph_input);
-	printf("TAPE ALPHABET\n\t");
-	alphabet_print(this->alph_tape);
 	printf("TAPES\n\t");
 	tapes_print(this->tapes);
 	printf("STATES\n\t");

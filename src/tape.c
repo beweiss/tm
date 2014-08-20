@@ -3,23 +3,29 @@
 #include "../include/tape.h"
 #include "../include/constants.h"
 #include "../include/singly_linked_list_macros.h"
+#include "../include/erring.h"
 
 /**
  * \brief Create new #tape object
  * \param input Input #word
- * \param priv #ACCESS privileges
  * \return New #tape object
  */
-tape *tape_new(word *input, ACCESS priv)
+tape *tape_new(word *input)
 {
 	/* FIXME Add error handling */
 	tape *ret = malloc(sizeof(*ret));
 	unsigned int i = 0;
 
-	ret->priv = priv;
-
-	/* FIXME Add error handling */
+	if (!ret) {
+		erring_add(E_MALL);
+		return NULL;
+	}
 	ret->start = tape_cell_list_new();
+
+	if (!(ret->start)) {
+		erring_add(CALL_FAILED_TO(tape_cell_list_new));
+		return NULL;
+	}
 
 	if (!input) {
 EMPTY:		tape_cell_list_add_node(ret->start, tape_cell_new(BLANK));
@@ -42,12 +48,25 @@ EMPTY:		tape_cell_list_add_node(ret->start, tape_cell_new(BLANK));
  */
 tape *tape_copy(tape *this)
 {
+	if (!this) {
+		erring_add(E_NULL);
+		return NULL;
+	}
 	tape *ret = malloc(sizeof(*ret));
 	struct tape_cell *iter_old = this->start->head;
 	struct tape_cell *iter_new = NULL;
 
-	ret->priv = this->priv;
+	if (!ret) {
+		erring_add(E_MALL);
+		return NULL;
+	}
 	ret->start = tape_cell_list_copy(this->start);
+
+	if (!(ret->start)) {
+		erring_add(CALL_FAILED_TO(tape_cell_list_copy));
+		free(ret);
+		return NULL;
+	}
 
 	iter_new = ret->start->head;
 
@@ -66,8 +85,12 @@ tape *tape_copy(tape *this)
  * \brief Add token to #tape
  * \param token Token which should be added
  */
-void tape_add_token(tape *this, unsigned int token)
+void tape_add_token(tape *this, uintptr_t token)
 {
+	if (!this) {
+		erring_add(E_NULL);
+		return;
+	}
 	tape_cell_list_add_node(this->start, tape_cell_new(token));
 }
 
@@ -83,6 +106,10 @@ void tape_add_token(tape *this, unsigned int token)
  */
 void tape_shift_pos(tape *this, SHIFT_DIR shift)
 {
+	if (!this) {
+		erring_add(E_NULL);
+		return;
+	}
 	if (shift == LEFT) {
 		if (!this->pos->prev) {
 			tape_cell_list_add_node_before(this->start, this->pos, tape_cell_new(BLANK));
@@ -101,8 +128,12 @@ void tape_shift_pos(tape *this, SHIFT_DIR shift)
  * \brief Get the current token - token on tape::pos
  * \return tape::pos::token
  */
-unsigned int tape_get_current_token(tape *this)
+uintptr_t tape_get_current_token(tape *this)
 {
+	if (!this) {
+		erring_add(E_NULL);
+		return;
+	}
 	return this->pos->token;
 }
 
@@ -111,7 +142,7 @@ unsigned int tape_get_current_token(tape *this)
  * \param alph Alphabet which should be the "source" of the tokens on tape
  * \return true if every token on tape is descended from given alphabet
  */
-bool tape_is_descended_from(tape *this, alphabet *alph)
+/*bool tape_is_descended_from(tape *this, alphabet *alph)
 {
 	struct tape_cell *iter = NULL;
 
@@ -124,7 +155,7 @@ bool tape_is_descended_from(tape *this, alphabet *alph)
 			return false;
 	}
 	return true;
-}
+}*/
 
 /**
  * \brief Clear tape
@@ -140,6 +171,14 @@ void tape_clear(tape *this)
  */
 void tape_add_word(tape *this, word *input)
 {
+	if (!this) {
+		erring_add(E_NULL);
+		return;
+	}
+	if (!input) {
+		erring_add(E_NULL);
+		return;
+	}
 	unsigned int i = 0;
 
 	for (i = 0; i < input->length; i++) {
@@ -153,11 +192,19 @@ void tape_add_word(tape *this, word *input)
  */
 word *tape_get_content(tape *this)
 {
+	if (!this) {
+		erring_add(E_NULL);
+		return;
+	}
 	unsigned int size = this->start->size;
-	unsigned int *letters = malloc(size * sizeof(int));
+	uintptr_t *letters = malloc(size * sizeof(uintptr_t));
 	unsigned int i = 0;
 	struct tape_cell *iter = this->start->head;
 
+	if (!letters) {
+		erring_add(E_MALL);
+		return NULL;
+	}
 	for (i = 0; i < size; i++) {
 		letters[i] = iter->token;
 		iter = iter->next;
@@ -175,21 +222,14 @@ word *tape_get_content(tape *this)
  *
  * \return true if 1. was true
  */
-bool tape_apply_action(tape *this, tape_action *action)
+bool tape_apply_actions(tape *this, tape_actions *actions)
 {
-	//FIXME privileges!!!!!!
-	if (this->pos->token != action->token_read)
-			return false;
-	this->pos->token = action->token_write;
-	tape_shift_pos(this, action->dir);
-	return true;
-}
-
-void tape_apply_default_action(tape *this, edge_default *action)
-{
-	//FIXME privileges!!!!!!
-	this->pos->token = action->token_write;
-	tape_shift_pos(this, action->dir);
+	//TODO IMPLEMENT
+	if (!this) {
+		erring_add(E_NULL);
+		return;
+	}
+	return false;
 }
 
 /**
@@ -197,29 +237,22 @@ void tape_apply_default_action(tape *this, edge_default *action)
  */
 void tape_free(tape *this)
 {
+	if (!this) {
+		erring_add(E_NULL);
+		return;
+	}
 	tape_cell_list_free(this->start);
 }
 
 /**
- * \brief Print #state object to stdout
+ * \brief Print #tape object to stdout
  */
 void tape_print(tape *this)
 {
-	//FIXME add error handling
-	if (!this)
+	if (!this) {
+		erring_add(E_NULL);
 		return;
-	printf("Tape:\n\tPRIV: ");
-	switch (this->priv) {
-		case READ:
-				printf("READ\n");
-				break;
-		case WRITE:
-				printf("WRITE\n");
-				break;
-		case RDWR:
-				printf("READ|WRITE\n");
-				break;
 	}
-	printf("\t");
+	printf("Tape:\n\t");
 	tape_cell_list_print(this->start, this->pos);
 }

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "../include/singly_linked_list_macros.h"
 #include "../include/state_list.h"
+#include "../include/erring.h"
 
 /**
  * \brief Create new #state_list object
@@ -11,12 +12,21 @@ state_list *state_list_new()
 {
 	//FIXME add error handling
 	state_list *ret = malloc(sizeof(*ret));
+
+	if (!ret) {
+		erring_add(E_MALL);
+		return NULL;
+	}
 	state_list_init(ret);
 	return ret;
 }
 
 void state_list_init(state_list *this)
 {
+	if (!this) {
+		erring_add(E_NULL);
+		return;
+	}
 	this->head = NULL;
 	this->size = 0;
 }
@@ -27,10 +37,14 @@ void state_list_init(state_list *this)
  */
 void state_list_add_node(state_list *this, state *new)
 {
-	if (!this)
+	if (!this) {
+		erring_add(E_NULL);
 		return;
-	if (!new)
+	}
+	if (!new) {
+		erring_add(E_NULL);
 		return;
+	}
 	state *last = S_LAST_ENTRY(this->head);
 
 	//FIXME container_of(....) to avoid condition
@@ -52,6 +66,10 @@ void state_list_add_node(state_list *this, state *new)
  */
 state *state_list_find_node(state_list *this, unsigned int id)
 {
+	if (!this) {
+		erring_add(E_NULL);
+		return;
+	}
 	state *iter = NULL;
 
 	S_FOR_EACH_ENTRY(this->head, iter) {
@@ -61,30 +79,34 @@ state *state_list_find_node(state_list *this, unsigned int id)
 	return NULL;
 }
 
-//FIXME what about the pretty functions we wrote?^^
 /**
  * \brief Copy #state_list object
  * \return Copy of #state_list object
  */
 state_list *state_list_copy(state_list *this)
 {
-	if (!this)
-		return NULL;
+	if (!this) {
+		erring_add(E_NULL);
+		return;
+	}
 	state_list *ret = state_list_new();
 	state *iter_state = NULL;
-	state *iter_ret = NULL;
+	state *copy = NULL;
 
-	ret->head = state_copy(this->head);
-	iter_ret = ret->head;
-
-	if (!iter_ret)
+	if (!ret) {
+		erring_add(CALL_FAILED_TO(state_list_new));
 		return NULL;
-
-	S_FOR_EACH_ENTRY(this->head->next, iter_state) {
-		iter_ret->next = state_copy(iter_state);
-		iter_ret = iter_ret->next;
 	}
-	ret->size =this->size;
+
+	S_FOR_EACH_ENTRY(this->head, iter_state) {
+		copy = state_copy(iter_state);
+		if (!copy) {
+			erring_add(CALL_FAILED_TO(state_copy));
+			state_list_free(ret);
+			return NULL;
+		}
+		state_list_add_node(ret, copy);
+	}
 	return ret;
 }
 
@@ -94,6 +116,10 @@ state_list *state_list_copy(state_list *this)
  */
 void state_list_delete_node(state_list *this, unsigned int id)
 {
+	if (!this) {
+		erring_add(E_NULL);
+		return;
+	}
 	state_list_delete_node_exact(this, state_list_find_node(this, id));
 }
 
@@ -106,12 +132,17 @@ void state_list_delete_node(state_list *this, unsigned int id)
  */
 void state_list_delete_node_exact(state_list *this, state *del)
 {
-	if (!this)
+	if (!this) {
+		erring_add(E_NULL);
 		return;
-	if (!this->head)
+	}
+	if (!(this->head)) {
 		return;
-	if (!del)
+	}
+	if (!del) {
+		erring_add(E_NULL);
 		return;
+	}
 	state *iter = container_of(&this->head, state, next);
 	state *prev = iter;
 
@@ -133,6 +164,10 @@ void state_list_delete_node_exact(state_list *this, state *del)
  */
 void state_list_free(state_list *this)
 {
+	if (!this) {
+		erring_add(E_NULL);
+		return;
+	}
 	while (this->head)
 		state_list_delete_node_exact(this, this->head);
 	free(this);
@@ -143,6 +178,10 @@ void state_list_free(state_list *this)
  */
 void state_list_print(state_list *this)
 {
+	if (!this) {
+		erring_add(E_NULL);
+		return;
+	}
 	state *iter = NULL;
 
 	S_FOR_EACH_ENTRY(this->head, iter) {

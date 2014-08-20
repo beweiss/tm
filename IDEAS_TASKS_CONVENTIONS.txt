@@ -36,6 +36,10 @@
 
 no tape_action instead only tape_actions with arrays!!!
 
+TODO: error handling in error.c and erring.c
+
+normal print is export to dot? great...
+
 brillant idea:
 
 	k: number of tapes

@@ -17,46 +17,38 @@ bool my_is_in_alph(uinptr_t)
 
 void strlen_less_10_tm()
 {
-	uintptr_t help[] = {1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6};
+	uintptr_t help[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5};
 	word *word_one = word_new(help, 12);
 	tapes *my_tapes = tapes_new(1, tape_new(word_one));
-	tm *machine1 = tm_new(my_tapes, my_is_in_alph);
-	/*unsigned int i = 0;
+	tm *machine1 = tm_new_with_states(my_tapes, my_is_in_alph, 10);
+	uintptr_t *read_vector[] = {NULL};
+	uintptr_t *write_vector[] = {&help[0]};
+	SHIFT_DIR dirs[] = {RIGHT};
+	SHIFT_DIR stand[] = {STAT};
+	unsigned int i = 0;
 	unsigned int j = 0;
 	unsigned int x = 0;
+	uintptr_t **helper = malloc(sizeof(uintptr_t *) * 10);
 
 	if (machine1 == NULL) {
 		printf("WTF???\n");
 		exit(0);
 	}
 
-	for (i = 0; i < 9; i++)
-		tm_add_state(machine1, NORMAL, edge_default_new(i + 1, BLANK, RIGHT));
-
-	tm_add_state(machine1, NORMAL, edge_default_new(11, BLANK, STAT));
-	tm_add_state(machine1, ACCEPT, NULL);
-	tm_add_state(machine1, REJECT, NULL);
-
-	for (i = 0; i < 10; i++) {
-		if (!tm_add_edge(machine1, i, 10, tape_action_new(BLANK, i, STAT)))
-			printf("WTF???\n");	
+	for (i = 0; i < 9; i++) {
+		helper[i] = (uintptr_t *) &help[i];
+		tm_add_edge(machine1, i, i + 1, tape_actions_new(1, read_vector, write_vector, dirs));
+		tm_add_edge_to_accept(machine1, i, tape_actions_new(1, write_vector, &helper[i], stand));
 	}
 
-	state *check = tm_compute(machine1);
+	helper[i] = (uintptr_t *) &help[i];
+	tm_add_edge_to_reject(machine1, i, tape_actions_new(1, read_vector, write_vector, stand));
+	tm_add_edge_to_accept(machine1, 9, tape_actions_new(1, write_vector, &helper[i], stand));
 
-	if (check) {
-		printf("Jop\n");
-		if (check == machine1->accept) {
-			printf("Yeah\n");
-		}
-	}
-
-	tape_print(&machine1->tapes->data[0]);
-
-	tm_export_to_dot_file(machine1, "../tm_short.dot");
-	//tm_print(machine1);
+	tm_print(machine1);
 	tm_free(machine1);
-	word_free(word_one);*/
+	word_free(word_one);
+	free(helper);
 }
 
 void add_mult_par_term_tm()

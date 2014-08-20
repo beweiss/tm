@@ -5,7 +5,7 @@ struct error {
 	const char *file;
 	const char *func;
 	int line;
-	const char *err_msg;
+	char *err_msg;
 };
 
 /**
@@ -14,7 +14,8 @@ struct error {
 
 */
 
-void error_init(struct error *this, const char *file, const char *func, int line, const char *err_msg);
+void error_init(struct error *this, const char *file, const char *func, int line, char *err_msg);
+void error_free(struct error *this);
 void error_print(struct error *this);
 
 #endif

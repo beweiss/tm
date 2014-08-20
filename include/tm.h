@@ -99,13 +99,15 @@ typedef struct {
 } tm;
 
 tm *tm_new(tapes *tapes, bool (*is_in_alph)(uintptr_t));
-void tm_add_state(tm *this, edge *out_default);
+tm *tm_new_with_states(tapes *tapes, bool (*is_in_alph)(uintptr_t), unsigned int states_num);
+void tm_add_state(tm *this);
+void tm_add_state_with_default(tm *this, edge *out_default);
 void tm_remove_state(tm *this, unsigned int id);
 state *tm_find_state(tm *this, unsigned int id);
 //FIXME maybe no variable arg list and ONE tape_actions
-edge *tm_add_edge(tm *this, unsigned int src, unsigned int dest, tape_actions *actions);
-//edge *tm_add_edge_to_accept(tm *this, unsigned int src, tape_action *action1, ...);
-//edge *tm_add_edge_to_reject(tm *this, unsigned int src, tape_action *action1, ...);
+void tm_add_edge(tm *this, unsigned int src, unsigned int dest, tape_actions *actions);
+void tm_add_edge_to_accept(tm *this, unsigned int src, tape_actions *actions);
+void tm_add_edge_to_reject(tm *this, unsigned int src, tape_actions *actions);
 tm *tm_copy(tm *this);
 state *tm_compute(tm *this);
 state *tm_compute_step(tm *this);

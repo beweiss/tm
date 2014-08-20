@@ -16,7 +16,6 @@ struct erring *erring = &__erring;
 void erring_init(unsigned int size_max)
 {
 	erring->size_max = size_max;
-	//FIXME add error handling - critical error!
 	erring->data = malloc(size_max * sizeof(struct error));
 
 	if (!(erring->data)) {
@@ -60,6 +59,9 @@ void erring_free()
 {
 	if (!erring)
 		return;
+	unsigned int i = 0;
+	for (i = 0; i < erring->size_max; i++)
+		error_free(&erring->data[i]);
 	free(erring->data);
 }
 

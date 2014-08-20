@@ -47,9 +47,42 @@ tm *tm_new(tapes *tapes, bool (*is_in_alph)(uintptr_t))
 
 	if (!(ret->states)) {
 		erring_add(CALL_FAILED_TO(state_list_new));
+		free(ret);
 		return NULL;
 	}
 	return ret;
+}
+
+tm *tm_new_with_states(tapes *tapes, bool (*is_in_alph)(uintptr_t), unsigned int states_num)
+{
+	tm *ret = tm_new(tapes, is_in_alph);
+	unsigned int i = 0;
+
+	if (!ret) {
+		erring_add(CALL_FAILED_TO(tm_new));
+		return NULL;
+	}
+	for (i = 0; i < states_num; i++) {
+		tm_add_state(ret);
+	}
+	return ret;
+}
+
+void tm_add_state(tm *this)
+{
+	state *new = NULL;
+
+	if (!this) {
+		erring_add(E_NULL);
+		return;
+	}
+	new = state_new(NULL);
+
+	if (!new) {
+		erring_add(CALL_FAILED_TO(state_new));
+		return;
+	}
+	state_list_add_node(this->states, new);
 }
 
 /**
@@ -64,7 +97,7 @@ tm *tm_new(tapes *tapes, bool (*is_in_alph)(uintptr_t))
  * \param type Type of the new state
  * \param out_default The ID of the default (implicit) target #state
  */
-void tm_add_state(tm *this, edge *out_default)
+void tm_add_state_with_default(tm *this, edge *out_default)
 {
 	state *new = NULL;
 
@@ -122,37 +155,40 @@ state *tm_find_state(tm *this, unsigned int id)
  * \param action1 First #tape_action object
  * \param ... tm::tapes::length - 1 #tape_action objects will follow
  */
-edge *tm_add_edge(tm *this, unsigned int src, unsigned int dest, tape_actions *actions)
+void tm_add_edge(tm *this, unsigned int src, unsigned int dest, tape_actions *actions)
 {
+	if (!this) {
+		erring_add(E_NULL);
+		return;
+	}
 	state *state_src = tm_find_state(this, src);
 	state *state_dest = tm_find_state(this, dest);
 	edge *new_edge = NULL;
 
-	if (!this) {
-		erring_add(E_NULL);
-		return NULL;
-	}
-	if (!actions) {
-		erring_add(E_NULL);
-		return NULL;
-	}
 	if (!state_src) {
 		erring_add("ERROR: src Node does not exist in tm");
-		return NULL;
+		return;
 	}
 	if (!state_dest) {
 		erring_add("ERROR: dest Node does not exist in tm");
-		return NULL;
+		return;
+	}
+	if (!actions) {
+		erring_add(E_NULL);
+		return;
+	}
+	if (actions->length != this->tapes->length) {
+		erring_add("ERROR: Length of tapes equals not length of actions");
+		return;
 	}
 
 	new_edge = edge_new(state_dest, actions);
 
 	if (!new_edge) {
 		erring_add(CALL_FAILED_TO(edge_new));
-		return NULL;
+		return;
 	}
 	edge_list_add_node(state_src->edges, new_edge);
-	return new_edge;
 
 	/*va_list arguments;
 	unsigned int num = this->tapes->length;
@@ -194,6 +230,50 @@ edge *tm_add_edge(tm *this, unsigned int src, unsigned int dest, tape_actions *a
 CLEANUP:
 	va_end(arguments);
 	return new_edge;*/
+}
+
+void tm_add_edge_to_accept(tm *this, unsigned int src, tape_actions *actions)
+{
+	if (!this) {
+		erring_add(E_NULL);
+		return;
+	}
+	if (actions->length != this->tapes->length) {
+		erring_add("ERROR: Length of tapes equals not length of actions");
+		return;
+	}
+	state *state_src = tm_find_state(this, src);
+	edge *def = NULL;
+
+	if (!state_src) {
+		erring_add("ERROR: src Node does not exist in tm");
+		return;
+	}
+	def = edge_new_accept_reject(true, actions);
+
+	edge_list_add_node(state_src->edges, def);
+}
+
+void tm_add_edge_to_reject(tm *this, unsigned int src, tape_actions *actions)
+{
+	if (!this) {
+		erring_add(E_NULL);
+		return;
+	}
+	if (actions->length != this->tapes->length) {
+		erring_add("ERROR: Length of tapes equals not length of actions");
+		return;
+	}
+	state *state_src = tm_find_state(this, src);
+	edge *def = NULL;
+
+	if (!state_src) {
+		erring_add("ERROR: src Node does not exist in tm");
+		return;
+	}
+	def = edge_new_accept_reject(false, actions);
+
+	edge_list_add_node(state_src->edges, def);
 }
 
 /**
@@ -465,7 +545,7 @@ tape *tm_select_tape(tm *this, unsigned int index)
 		return NULL;
 	}
 	if (index >= this->tapes->length) {
-		erring_add("ERROR: Invalid Index %u - maximum Index is %u", index, this->tapes->length);
+		erring_add("ERROR: Invalid Index %u - maximum Index is %u", index, this->tapes->length - 1);
 		return NULL;
 	}
 	return &this->tapes->data[index];

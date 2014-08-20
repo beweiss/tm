@@ -31,14 +31,14 @@ struct state {
 	unsigned int id;
 	//unsigned int weight;
 	edge *out_default;
-	struct edge_list *edges;
+	edge_list *edges;
 	state *next;
 };
 
 state *state_new(edge *out_default);
-state *state_new_exact(unsigned int id, edge *out_default, struct edge_list *edges);
-void state_init(state *this, edge *out_default, struct edge_list *edges);
-void state_init_exact(state *this, unsigned int id, edge *out_default, struct edge_list *edges);
+state *state_new_exact(unsigned int id, edge *out_default, edge_list *edges);
+void state_init(state *this, edge *out_default, edge_list *edges);
+void state_init_exact(state *this, unsigned int id, edge *out_default, edge_list *edges);
 state *state_copy(state *this);
 void state_free(state *this);
 void state_print(state *this);

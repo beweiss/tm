@@ -2,12 +2,21 @@
 #include <stdlib.h>
 #include "../include/error.h"
 
-void error_init(struct error *this, const char *file, const char *func, int line, const char *err_msg)
+void error_init(struct error *this, const char *file, const char *func, int line, char *err_msg)
 {
+	if (!this)
+		return;
 	this->file = file;
 	this->func = func;
 	this->line = line;
 	this->err_msg = err_msg;
+}
+
+void error_free(struct error *this)
+{
+	if (!this)
+		return;
+	free(this->err_msg);
 }
 
 void error_print(struct error *this)

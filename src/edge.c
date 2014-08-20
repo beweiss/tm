@@ -94,7 +94,6 @@ edge *edge_copy(edge *this)
 void edge_free(edge *this)
 {
 	if (!this) {
-		erring_add(E_NULL);
 		return;
 	}
 	tape_actions_free(this->actions);
@@ -107,7 +106,6 @@ void edge_free(edge *this)
 void edge_print(edge *this)
 {
 	if (!this) {
-		erring_add(E_NULL);
 		return;
 	}
 	if (this->target)

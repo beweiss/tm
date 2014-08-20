@@ -54,9 +54,35 @@ void tape_actions_free(tape_actions *this)
  */
 void tape_actions_print(tape_actions *this)
 {
-	/*unsigned int i = 0;
+	if (!this) {
+		return;
+	}
+	unsigned int i = 0;
 
+	printf("\t\t\tTape actions: \n\t\t\t");
 	for (i = 0; i < this->length; i++) {
-		tape_action_print(&this->data[i]);
-	}*/
+		if (!(this->vec_read[i]))
+			printf("ANY, ");
+		else
+			printf("%u, ", this->vec_read[i][0]);
+		if (!(this->vec_write[i]))
+			printf("NOTHING, ");
+		else
+			printf("%u, ", this->vec_write[i][0]);
+		switch (this->vec_dirs[i]) {
+			case LEFT:
+				printf("LEFT, ");
+				break;
+			case RIGHT:
+				printf("RIGHT, ");
+				break;
+			case STAT:
+				printf("STAT, ");
+				break;
+			default:
+				erring_add("WARNING: Wrong value for direction!");
+				break;
+		}
+	}
+	printf("\n");
 }

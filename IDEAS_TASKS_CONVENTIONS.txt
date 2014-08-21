@@ -1,201 +1,79 @@
-/**
- *
- * IDEAS for tm.h:
- *
- * tm_cur_state *tm_get_current_state(tm *this) - return pointer to tm_cur_state struct
- * static inline int *__tm_compute_step(tm *this); - touches only tm_cur_state
- *
- * int tm_compute_step(tm *this) {
- *	__tm_compute_step(this);
- * }
- *
- * int tm_compute(tm *this) {
- *	__tm_compute_step()
- *	until we reached accepting or rejecting state
- * }
- *
- * tm_cur_state *tm_simulate_compute(tm *this)
- * {
- *	tm_cur_state *save = tm_cur_state_copy(this->current);
- *	tm_cur_state *ret = this->current;
- *
- *	tm_compute(this);
- *
- *	this->current = save;
- *
- *	return ret;
- * }
- *
- * struct tape_actions_list {
- *	struct tape_actions *head;
- *	unsigned int size;
- * }
- *
- * void tm_compute_step_reverse(tm *this) - "undo" the last transition
- *
- */
-
-maybe no state_list - instead states (array of states)
-in which situations we NEED a list?
- : create turing machine from "description in asm language"
- : number of edges is known too....maybe struct edges?
- : maybe container struct around state to combine advantages:
-
-	struct tm_states {
-		enum TYPE type; //tells us if list or array is used
-		union {
-			state_list *list;
-			states *array;
-		};
-		unsigned int size;
-	}
-
-	and the same for tm_edges
-
-subroutines - own subroutines like convert_number_new_base()
-or other useful subroutines.
-
-turing machines as an transition from one state to another
-
-
-no tape_action instead only tape_actions with arrays!!!
-
-TODO: error handling in error.c and erring.c
-
-normal print is export to dot? great...
-
-maybe make initial state userdefined:
-default is the first state in the state list but it can be changed
-
+Ideas for the project itself
+============================
 
 - forking of turing machine? - COW tape (only cell copy)
-- better distinction between data and state of tm?
-- subroutine / concat als uebergang
-- no alphabet, _just_ uintptr_t and check() and is_blank()
-- add WRITE_NOTHING member to edge_default
-- tape_new_empty() should be possible!!!
-- several tapes - not working - read as vector and not as distinct tokens!
-- beautify includes
-- usr pointer in some structs?
+- better distinction between data and state of tm
+- tm_states *states; instead of state_list *states
+  IMPORTANT: new data structures - maybe dynamic array because we do not
+  have any deletions!
+  states are only added so....how about 
+- tape_new_empty() should be possible
+- usr pointer in some structs
+- void tm_compute_step_reverse(tm *this) - "undo" the last transition
+- subroutines - own subroutines like convert_number_new_base()
+  or other useful subroutines.
+- normal print is export to dot? great...
+- turing machines as an transition from one state to another
+  edge::target points to start state of
+- maybe distinguish between structname_free() and structname_free_refs()
+  this would be useful to know if the struct pointer itself is freed or just
+  the references which it owns
 
-grammar interpreter/parser on the base of this tm-project
-manowar generator on the base of this tm-project
-general parser for cool stuff like own xml
+Ideas which are only linked to this project:
+============================================
+ -grammar interpreter/parser on the base of this tm-project
+  manowar lyrics generator on the base of this tm-project
+  general parser for cool stuff like own xml
 
 /**
- *	1) All macros,constants and enums in caps: MAX_BUFFER_SIZE, TRACKING_ID_PREFIX.
+ *	1) All macros,constants and enums in caps except for function-like macros
  *	2) Struct names and typedef's in snake_case
  *	3) Functions that operate on structs: structname_method(structname *this, ...)
- *	5) Global variables: just don't use global variables. They are evil.
- *	6) Functions that are there, but shouldn't be called directly,
- *	or have obscure uses, or whatever: one or more underscores
- *	at the beginning: __structname_function_name()
- *	7) List-Classes: List-Class of example is: example_list
- *	7.1) element name is "node":
+ *	   static functions that operate on structs: __structname_method(structname *this, ...)
+ *	7) List-structs: List-struct of struct example is: struct example_list
+ *	7.1) element name is always "node":
  *		example_list_add_node(example_list *this, ...)
  *		exampel_list_del_node(example_list *this, ...)
- *	8) Array-Classes: Array-Class of example is: examples with members "data" and "length"
- *	9) EVERY Class has a structname_free method!!!
+ *	8) Array-structs: Array-struct of example is: examples with members "data" and "length"
+ *	9) For every struct we have the functions:
+ *		structname_free()
+ *		structname_copy()
+ *		structname_print()
+ *		structname_init()
+ *		structname_new()
  */
 
-/**
- *
- *	NFA: TuringMachine with one (read-only) tape. Only valid direction is
- *	LEFT and computation stops when end of tape is reached or first blank
- *	is read
- *
- *	=> Conclusion: maybe add for every state edge with (q_x, BLANK) => REJECT
- *
- *	BETTER: Every state of a (deterministic) Turing Machine has to have X
- *		outgoing edges. X is the cardinality of the tape-alphabet.
- *		So add negative edges: when there is no outgoing edge for x
- *		then go to the REJECT state.
- *
- *	Event for every transition? Would be cool for endless machines
- *	or to call a function...callback
- *
- *	Add INPUT ALPHABET AND TAPE ALPHABET and make it local to Turing Machine
- *
- * TASKS:
- *	- TODO grammar support!
- *			- TODO unite, concat, intersect
- *
- *
- *
- * NFA:
- * 1: Add state: just add node to node_list (regular list)
- * 2: Add edge: set token (and tape_output if transductor...this will be written to tape!)
- * 		set targets with id of targets
- *		set edge *next...(regular list)
- *
- * PDA:
- * 1: Add state: just add node to node_list (regular list)
- * 2: Add edge: set token (and tape_output of second tape if transductor...this will be written to tape!)
- * 		set targets with id of targets
- * 		set edge *next...(regular list)
- * 		set tape_input if there is a stack to read from...
- *		set tape_output if there is a stack to write to...
- *
- * Turing Machine:
- * 1: Add state: just add node to node_list (regular list)
- * 2: Add edge: set token
- * 		set targets with id of targets
- * 		set edge *next...(regular list)
- * 		"select" tape_s_
- * 		set tape_shift_dir to set shift direction on tape...
- * 		
- * Possible combinations: DFA, DFA_Transductor, NFA, NFA_Transductor, PDA, PDA_Transductor, Turing Machine (multiple tapes)
- *
- * number and kind of tapes...complicated
- * nfa and dfa may only contain ONE tape (read-only)
- * nfa_t and dfa_t may contain TWO tapes (read-only and write-only)
- * pda may contain TWO tapes (read-only and read-write)
- * pda_t may contain THREE tapes (read-only, read-write, write-only)
- * turing machine may contain X tapes (read-write shift)
- */
-
-/*struct grammar {
-	struct __grammar *grammar;
-};
-
-struct __grammar {
+struct grammar {
 	struct rules *left_side;
 	struct rules *right_side;
 };
 
 struct rules {
-	struct __rules *rules;
-	unsigned int num; 
+	struct __rules *data;
+	unsigned int length; 
 };
 
 struct __rules {
-	union __rule *rules;
+	struct __rule *rules;
 	unsigned int num;
 };
 
-union __rule {
-	char terminal;
-	char non_terminal;
+struct __rule {
+	enum TYPE type;
+	union {
+		char terminal;
+		char non_terminal;
+	};
 };
 
-enum TYPES {
-	IS_DET = 1,
-	IS_TRANS = 2,
-	IS_NFA = 4,
-	IS_PDA = 8,
-	IS_TM = 16
-};
+	S -> (S * S) | S + S | (S) | N
+	N -> 0 | K
+	K -> 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | KK | K0
+
+	struct grammar *math_term;
+
+	math_term->left_side->length = 3;
+	math_term->left_size->data[0] = 
 
 
 
-/*
- * add_edge(tm *machine, state *src, state *dest, ...);
- *
- *
- * NFA:  	add_edge(tm *machine, state *src, state *dest, 'x', NULL)
- * NFA_T:	add_edge(tm *machine, state *src, state *dest, 'x', 'y', NULL)
- * PDA:  	add_edge(tm *machine, state *src, state *dest, 'x', 'y', 'z', NULL)
- * PDA_T:	add_edge(tm *machine, state *src, state *dest, 'x', 'y', 'z', 'a', NULL)
- * TURING(1):  	add_edge(tm *machine, state *src, state *dest, 'x', 'y', NULL)
- * TURING(3):  	add_edge(tm *machine, state *src, state *dest, 'x', 'y', 'a', 'b', 'c', 'd', NULL)
-*/

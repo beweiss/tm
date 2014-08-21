@@ -48,8 +48,7 @@ typedef struct {
  * 	+ Implementation: #tape_actions in each #edge
  * - \f$q_0 \in Q\f$ is the initial state
  * 	+ The start of the computation
- * 	+ Implementaion: By default the first #state in tm::states is used
- * 	  for this but it can also be defined by the user
+ * 	+ Implementaion: By default the first #state in tm::states
  * - \f$F_a \subseteq Q\f$ is the set of final or accepting states.
  * 	+ If one of these states is reached the computation ends successfully
  * 	  => the input word is accepted by the Turing Machine
@@ -82,6 +81,10 @@ struct tm_states {
 		state_list *list;
 	};
 };
+
+
+
+
 */
 
 tm *tm_new(tapes *tapes);

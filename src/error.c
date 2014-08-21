@@ -19,6 +19,12 @@ void error_free(struct error *this)
 	free(this->err_msg);
 }
 
+/**
+ * \brief Print error struct in specific format
+ *
+ * Format: "In __FILE__ in __func__ at Line __LINE__: err_msg\n"
+ *
+ */
 void error_print(struct error *this)
 {
 	printf("In %s in %s at Line %d: %s\n", this->file, this->func, this->line, this->err_msg);

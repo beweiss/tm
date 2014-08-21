@@ -29,7 +29,7 @@
 #define erring_add(err_msg, ...) erring_add_long(__FILE__, __func__, __LINE__, (err_msg), ##__VA_ARGS__)
 
 /**
- * \struct tm_erring
+ * \struct erring
  * \brief Represents the global structure to save error messages
  *
  * This is a ring buffer and the only "special" thing is that _always_

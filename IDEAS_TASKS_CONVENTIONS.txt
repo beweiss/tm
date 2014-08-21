@@ -35,6 +35,22 @@
  *
  */
 
+maybe no state_list - instead states (array of states)
+in which situations we NEED a list?
+ : create turing machine from "description in asm language"
+ : number of edges is known too....maybe struct edges?
+ : maybe container struct around state to combine advantages:
+
+	struct tm_states {
+		enum TYPE type; //tells us if list or array is used
+		union {
+			state_list *list;
+			states *array;
+		};
+		unsigned int size;
+	}
+
+	and the same for tm_edges
 
 subroutines - own subroutines like convert_number_new_base()
 or other useful subroutines.

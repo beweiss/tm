@@ -3,10 +3,12 @@
 
 #include <tm/error.h>
 
-/*! The maximum size of the erring - \see tm_init */
+/*! The maximum size of the erring \see \ref init_exit.c
+	
+*/
 #define ERRING_SIZE_MAX 1000
 
-/*! The default size of the erring - \see tm_init */
+/*! The default size of the erring \see \ref init_exit.c */
 #define ERRING_SIZE_DEFAULT 100
 
 /**
@@ -25,8 +27,8 @@
 /**
  * \brief Add format string error message to erring
  *
- * Interesting: This functionality is *only* possible through a macro because
- * so we can add the __FILE__, __func__ and __LINE__ macros and the user
+ * Interesting: This functionality is *only* possible through a macro because<br>
+ * so we can add the __FILE__, __func__ and __LINE__ macros and the user<br>
  * does not have to write them by himself.
  *
  * \param err_msg The format string
@@ -38,12 +40,12 @@
  * \struct erring
  * \brief Represents the global structure to save error messages
  *
- * This is a ring buffer and the only "special" thing is that _always_
- * the last erring::size_max entries are stored so the "outer functions"
- * (or "calling functions") are always above the "inner functions"
- * (the "called functions")
- * I like that because no one wants to know the error messages of
- * things like malloc() *first*.
+ * This is a ring buffer and the only "special" thing is that _always_<br>
+ * the last erring::size_max entries are stored so the "outer functions"<br>
+ * (or "calling functions") are always above the "inner functions"<br>
+ * (the "called functions")<br>
+ * I like that because no one wants to know the error messages of<br>
+ * things like malloc() *first*.<br>
  *
  * \var erring::head
  * Pointer to the first entry

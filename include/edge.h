@@ -16,13 +16,13 @@ typedef struct edge edge;
  * \var edge::target
  * Pointer to the target #state
  * \var edge::accept_reject
- * Is *only* considered if edge::target is NULL
- * If true then the target is the accepting state (no actual state)
- * If false then the taget is the rejecting state (no actual state)
+ * Is *only* considered if edge::target is NULL<br>
+ * If true then the target is the accepting state (no actual state)<br>
+ * If false then the taget is the rejecting state (no actual state)<br>
  * \var edge::actions
  * Determines the transition actions (read, write, move)
  * \var edge::next
- * This member may only set by #edge_list functions so it is always NULL in the
+ * This member may only set by #edge_list functions so it is always NULL in the<br>
  * context of this struct
  */
 struct edge {

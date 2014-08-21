@@ -1,9 +1,10 @@
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <error.h>
 #include <errno.h>
 #include <stdarg.h>
-#include "../include/erring.h"
+#include "tm/erring.h"
 
 static void __erring_enqueue(struct error *new);
 static void __erring_dequeue();
@@ -38,9 +39,11 @@ void erring_add_long(const char *file, const char *func, const int line, const c
 	va_list arguments;
 
 	va_start(arguments, err_format);
-	size = vsnprintf(buf, size, err_format, arguments);
-	va_start(arguments, err_format);
-	buf = malloc(size + 1);
+	if (vasprintf(&buf, err_format, arguments) == -1) {
+		error_at_line(0, errno, __FILE__, __LINE__, CALL_FAILED_TO(vasprintf) " in %s", __func__);
+		va_end(arguments);
+		return;
+	}
 
 	if (!buf) {
 		error_at_line(0, errno, __FILE__, __LINE__, CE_MALL " in %s", __func__);
@@ -48,7 +51,6 @@ void erring_add_long(const char *file, const char *func, const int line, const c
 		return;
 	}
 
-	vsnprintf(buf, size + 1, err_format, arguments);
 	va_end(arguments);
 
 	error_init(&x, file, func, line, buf);

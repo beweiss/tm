@@ -8,15 +8,15 @@
  * \struct tape_cell_list
  * \brief Represents the "List struct" of #tape_cell
  *
- * Internal representation of a tape of a Turing Machine.
- * We use a doubly linked list for this because a tape in a Turing Machine
- * is often changed (new tokens) and we must be able to move in any direction
- * on the tape (see #SHIFT_DIR)
- * Please be aware of the fact that this is a "doubly linked list" and not
- * a "ring" - the prev pointer of the head is always NULL and the next pointer
- * of the last element is also NULL.
- * This is useful to determine "end" an "start" of the tape so we can
- * automatically expand the list if the user moves to NULL.
+ * Internal representation of a tape of a Turing Machine.<br>
+ * We use a doubly linked list for this because a tape in a Turing Machine<br>
+ * is often changed (new tokens) and we must be able to move in any direction<br>
+ * on the tape (see #SHIFT_DIR)<br>
+ * Please be aware of the fact that this is a "doubly linked list" and not<br>
+ * a "ring" - the prev pointer of the head is always NULL and the next pointer<br>
+ * of the last element is also NULL.<br>
+ * This is useful to determine "end" an "start" of the tape so we can<br>
+ * automatically expand the list if the user moves to NULL.<br>
  *
  * \var tape_cell_list::head
  * Head of the list

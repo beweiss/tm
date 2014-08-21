@@ -1,2 +1,1 @@
-- fix erring_add_long - use vasprintf instead of vsnprintf
-
+- adjust definition of the tm to the definition of a tm with multiple tapes

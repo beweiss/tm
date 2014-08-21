@@ -26,8 +26,6 @@ typedef struct {
  * \struct tm
  * \brief Represents the Turing Machine
  *
- * FIXME: adjust this definition to the definition of a tm with multiple tapes
- *
  * Turing machine is defined as a 8-tuple \f$M = (Q, A_i, A_t, b, \delta, q_0, F_a, F_r)\f$
  * -\f$Q\f$ is a finite, non-empty set of states
  * 	+ Implementation: tm::states

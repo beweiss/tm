@@ -9,7 +9,7 @@
  * \struct tapes
  * \brief Represents the "Array struct" of #tape
  *
- * Every #tape_actions is performed on all tapes so a single tape may
+ * Every #tape_actions is performed on all tapes so a single tape may<br>
  * not be manipulated otherwise.
  *
  * \var tapes::tapes

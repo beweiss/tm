@@ -8,9 +8,9 @@
  * \struct tape_actions
  * \brief Contains all actions linked to a transition
  *
- * Why an Array of Pointers? Because to "establish a new level" to
- * distinguish between the value of the token and the "absence of a token".
- * see #tapes_apply_actions to see how the values are evaluated
+ * Why an Array of Pointers? Because to "establish a new level" to<br>
+ * distinguish between the value of the token and the "absence of a token".<br>
+ * see #tapes_apply_actions to see how the values are evaluated<br>
  *
  * \var tape_actions::vec_read
  * Array of uintptr_t Pointers ("read vector")

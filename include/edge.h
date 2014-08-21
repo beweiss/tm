@@ -11,16 +11,19 @@ typedef struct edge edge;
  * \struct edge
  * \brief Represents an edge of the #tm
  *
- * This is the "Node/Entry - Class" of #edge_list so here are no list functions.
+ * This is the "Node/Entry struct" of #edge_list so here are no list functions.
  *
- * \var edge::id_dest
- * ID of the target #state
+ * \var edge::target
+ * Pointer to the target #state
+ * \var edge::accept_reject
+ * Is *only* considered if edge::target is NULL
+ * If true then the target is the accepting state (no actual state)
+ * If false then the taget is the rejecting state (no actual state)
  * \var edge::actions
- * "Array Object" of #tape_action and contains #::tm::tapes::length objects!
- * One #tape_action per every #tape!
+ * Determines the transition actions (read, write, move)
  * \var edge::next
- * This member may only set by #edge_list methods so it is always NULL in the
- * context of this class
+ * This member may only set by #edge_list functions so it is always NULL in the
+ * context of this struct
  */
 struct edge {
 	state *target;

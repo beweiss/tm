@@ -9,7 +9,7 @@ typedef struct edge_list edge_list;
  * \struct edge_list
  * \brief Represents an list of edges (#edge) of a #state of the #tm
  *
- * This is the "List Class" of #edge so here are only list functions.
+ * This is the "List struct" of #edge so here are only list functions.
  *
  * \var edge_list::head
  * Head of the list

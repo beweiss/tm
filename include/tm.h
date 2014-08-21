@@ -99,7 +99,6 @@ void tm_add_state(tm *this);
 void tm_add_state_with_default(tm *this, edge *out_default);
 void tm_remove_state(tm *this, unsigned int id);
 state *tm_find_state(tm *this, unsigned int id);
-//FIXME maybe no variable arg list and ONE tape_actions
 void tm_add_edge(tm *this, unsigned int src, unsigned int dest, tape_actions *actions);
 void tm_add_edge_to_accept(tm *this, unsigned int src, tape_actions *actions);
 void tm_add_edge_to_reject(tm *this, unsigned int src, tape_actions *actions);

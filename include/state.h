@@ -11,18 +11,14 @@ typedef struct state state;
  * \struct state
  * \brief Represents an state of the #tm
  *
- * This is the "Node/Entry Object" for #state_list so here are no list functions.
+ * This is the "Node/Entry struct" for #state_list so here are no list functions.
  *
  * \var state::id
  * ID of the #state
- * \var state::is_accept
- * Determines if #state is accepting state or not
- * \var state::is_reject
- * Determines if #state is rejecting state or not
  * \var state::out_default
- * The ID of the implicit (default) target #state 
+ * The default (implicit) outgoing edge with its default #tape_actions
  * \var state::edges
- * List of outgoing edges
+ * List of explicit outgoing edges
  * \var state::next
  * This member may only set by #state_list methods so it is always NULL in this
  * context

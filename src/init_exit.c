@@ -5,18 +5,16 @@
 #include <errno.h>
 #include "../include/erring.h"
 
-#define MAX_ERRING_SIZE 1000
-
 __attribute__((constructor))
 void tm_init()
 {
 	char *env_size = getenv("TM_ERRING_SIZE");
-	unsigned int size = 100;
+	unsigned int size = ERRING_SIZE_DEFAULT;
 
 	if (env_size) {
 		unsigned int ret = strtoul(env_size, NULL, 10);
 
-		if (ret <= MAX_ERRING_SIZE && ret)
+		if (ret <= ERRING_SIZE_MAX && ret)
 			size = ret;
 	}
 	erring_init(size);

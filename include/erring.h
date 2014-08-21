@@ -3,6 +3,12 @@
 
 #include <tm/error.h>
 
+/*! The maximum size of the erring - \see tm_init */
+#define ERRING_SIZE_MAX 1000
+
+/*! The default size of the erring - \see tm_init */
+#define ERRING_SIZE_DEFAULT 100
+
 /**
  * Useful error string constants for erring_add macro
  */

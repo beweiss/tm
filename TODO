@@ -1,0 +1,2 @@
+- fix erring_add_long - use vasprintf instead of vsnprintf
+

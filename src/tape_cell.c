@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../include/tape_cell.h"
-#include "../include/erring.h"
+#include <tm/tape_cell.h>
+#include <tm/erring.h>
 
 /**
  * \brief Create new #tape_cell struct

@@ -1,32 +1,29 @@
-VERSION = 3.02
-CC	= /usr/bin/gcc
-CFLAGS	= -Wall -g -fPIC
-LINKER   = gcc -shared -o
-LFLAGS   = -Wall -Werror
-SRCDIR= src
-OBJDIR= obj
-LIBDIR= lib
+CC		 = gcc -c
+CCLD		 = gcc
+MERGE		 = ld -r
+LD		 = ld
+LDSO		 = ld
 
-TARGET = libtm.so
+RM		 = rm -f
+STRIP		 = strip
 
-SOURCES  := $(wildcard $(SRCDIR)/*.c)
-OBJECTS  := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
-rm       = rm -f
+CFLAGS		+= -Wall -ggdb
+CPPFLAGS	+= -I$(TREE)/include
+LDFLAGS		+= -ggdb
 
-$(LIBDIR)/$(TARGET): $(OBJECTS)
-	@$(LINKER) $@ $(LFLAGS) $(OBJECTS)
-	@echo "Linking complete!"
+TREE		:= $(CURDIR)
+MBUILD		 = $(TREE)/Makefile.build
 
-$(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c
-	@$(CC) $(CFLAGS) -c $< -o $@
-	@echo "Compiled "$<" successfully!"
+export CC CCLD MERGE LD LDSO RM STRIP CFLAGS CPPFLAGS LDFLAGS TREE MBUILD \
+       DEBUG
 
-.PHONEY: clean
-clean:
-	@$(rm) $(OBJECTS)
-	@echo "Cleanup complete!"
+targets		+= libtm.so
+rm_targets	+= libtm.so
 
-.PHONEY: remove
-remove: clean
-	@$(rm) $(LIBDIR)/$(TARGET)
-	@echo "Executable removed!"
+desc_targets	 = src/ test/
+targets		+= $(desc_targets)
+clean_targets	+= $(desc_targets)
+
+include $(MBUILD)/Makefile.build
+
+libtm.so: src/src.o.o

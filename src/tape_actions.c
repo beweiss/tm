@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../include/tape_actions.h"
-#include "../include/erring.h"
+#include <tm/tape_actions.h>
+#include <tm/erring.h>
 
 /**
  * \brief Create new #tape_actions object

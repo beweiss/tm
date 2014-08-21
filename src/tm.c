@@ -6,10 +6,11 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include "../include/singly_linked_list_macros.h"
-#include "../include/constants.h"
-#include "../include/tm.h"
-#include "../include/erring.h"
+
+#include <tm/singly_linked_list_macros.h>
+#include <tm/constants.h>
+#include <tm/tm.h>
+#include <tm/erring.h>
 
 static state *__tm_compute(tm *this, state *current);
 

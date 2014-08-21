@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../include/singly_linked_list_macros.h"
-#include "../include/state_list.h"
-#include "../include/erring.h"
+#include <tm/singly_linked_list_macros.h>
+#include <tm/state_list.h>
+#include <tm/erring.h>
 
 /**
  * \brief Create new #state_list object

@@ -1,7 +1,7 @@
 #ifndef STATE_LIST_H_
 #define STATE_LIST_H_
 
-#include "state.h"
+#include <tm/state.h>
 
 /**
  * \struct state_list

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../include/word.h"
-#include "../include/erring.h"
+#include <tm/word.h>
+#include <tm/erring.h>
 
 /**
  * \brief Create new #word object

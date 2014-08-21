@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../include/state.h"
-#include "../include/erring.h"
+#include <tm/state.h>
+#include <tm/erring.h>
 
 /**
  * \brief Create new #state object

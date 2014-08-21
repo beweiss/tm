@@ -3,9 +3,9 @@
 
 typedef struct state state;
 
-#include "edge_list.h"
 #include <stdbool.h>
-#include "constants.h"
+#include <tm/edge_list.h>
+#include <tm/constants.h>
 
 /**
  * \struct state

@@ -4,8 +4,8 @@
 typedef struct edge edge;
 
 #include <stdbool.h>
-#include "state.h"
-#include "tape_actions.h"
+#include <tm/state.h>
+#include <tm/tape_actions.h>
 
 /**
  * \struct edge

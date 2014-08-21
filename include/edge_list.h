@@ -3,7 +3,7 @@
 
 typedef struct edge_list edge_list;
 
-#include "edge.h"
+#include <tm/edge.h>
 
 /**
  * \struct edge_list

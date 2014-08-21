@@ -12,7 +12,7 @@
 #include <tm/tm.h>
 #include <tm/erring.h>
 
-static state *__tm_compute(tm *this, state *current);
+static inline void __tm_compute_step(tm *this);
 
 /**
  * \brief Create new #tm object
@@ -115,19 +115,6 @@ void tm_add_state_with_default(tm *this, edge *out_default)
 }
 
 /**
- * \brief Remove state from tm
- * \param id ID of the wanted #state
- */
-void tm_remove_state(tm *this, unsigned int id)
-{
-	if (!this) {
-		erring_add(E_NULL);
-		return;
-	}
-	//state_list_remove_node(this->states, id);
-}
-
-/**
  * \brief Find state in tm
  * \param id ID of the wanted #state
  */
@@ -189,47 +176,6 @@ void tm_add_edge(tm *this, unsigned int src, unsigned int dest, tape_actions *ac
 		return;
 	}
 	edge_list_add_node(state_src->edges, new_edge);
-
-	/*va_list arguments;
-	unsigned int num = this->tapes->length;
-	tape_action *action_array = NULL;
-	tape_actions *actions = NULL;
-	tape_action *check = NULL;
-	edge *new_edge = NULL;
-	unsigned int i = 0;
-
-	va_start(arguments, action1);
-
-	if (num > 1) {
-		action_array = malloc(sizeof(tape_action) * num);
-		action_array[0] = *action1;
-	}
-	else {
-		action_array = action1;
-	}
-
-	for (i = 1; i < num; i++) {
-		check = va_arg(arguments, tape_action*);
-		if (!check) {
-			free(action_array);
-			goto CLEANUP;
-		}
-		if (!alphabet_contains(this->alph_tape, check->token_read)
-		    || !alphabet_contains(this->alph_tape, check->token_write)) {
-			free(action_array);
-			goto CLEANUP;
-		}
-		action_array[i] = *check;
-	}
-
-	actions = tape_actions_new(num, action_array);
-
-	new_edge = edge_new(state_dest, actions);
-
-	edge_list_add_node(state_src->edges, new_edge);
-CLEANUP:
-	va_end(arguments);
-	return new_edge;*/
 }
 
 void tm_add_edge_to_accept(tm *this, unsigned int src, tape_actions *actions)
@@ -276,30 +222,9 @@ void tm_add_edge_to_reject(tm *this, unsigned int src, tape_actions *actions)
 	edge_list_add_node(state_src->edges, def);
 }
 
-/**
- * \brief Start the computation of the Turing Machine
- *
- * There have to be at least one state and there have to be
- * 1 accepting state or 1 rejecting state.
- *
- * \return The last #state we reached
- */
-state *tm_compute(tm *this)
+static inline void __tm_compute_step(tm *this)
 {
-	/*if (!this)
-		return NULL;
-	if (!this->states->head)
-		return NULL;
-	return __tm_compute(this, this->states->head);*/
-}
-
-/**
- * \brief Internal helper function of tm_compute
- * \return The last #state we reached
- */
-static state *__tm_compute(tm *this, state *current)
-{
-	//FIXME END CONDITION
+	//TODO IMPLEMENT!
 	/*if (!current)
 		return NULL;
 	edge *iter = NULL;
@@ -324,12 +249,36 @@ static state *__tm_compute(tm *this, state *current)
 	return NULL;*/
 }
 
+void tm_compute_step(tm *this)
+{
+	__tm_compute_step(this);
+}
+
+/**
+ * \brief Start the computation of the Turing Machine
+ *
+ * There have to be at least one state and there have to be
+ * 1 accepting state or 1 rejecting state.
+ *
+ * \return The last #state we reached
+ */
+void tm_compute(tm *this)
+{
+	//TODO IMPLEMENT!
+	if (!this) {
+		erring_add(E_NULL);
+		return;
+	}
+	//call __tm_compute_step in a loop
+}
+
 /**
  * \brief Generate accepted word
  * \return #word object
  */
 word *tm_gen_accepted_word(tm *this)
 {
+	//TODO IMPLEMENT!
 	/*if (!this)
 		return NULL;
 	return NULL;*/

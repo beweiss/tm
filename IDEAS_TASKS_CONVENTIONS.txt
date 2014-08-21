@@ -67,32 +67,6 @@ normal print is export to dot? great...
 maybe make initial state userdefined:
 default is the first state in the state list but it can be changed
 
-brillant idea:
-
-	k: number of tapes
-
-	read anything; write something: NULL, V, {L, S, R}^k
-	read anything; write nothing: NULL, NULL, {L, S, R}^k
-	read something; write something: V, V, {L, S, R}^k
-	read something; write nothing: V, NULL, {L, S, R}^k
-
-	(r, w, {L, NULL, R})
-	(r, w, {L, NULL, R})
-	(r, w, {L, NULL, R})
-	(r, w, {L, NULL, R})
-	(r, w, {L, NULL, R})
-
-	if direction array == NULL then no movement on all tapes!
-	
-
-	only L and R and if it is NULL then S
-
-	tape_actions: 3 arrays (with k length) of pointers with same length
-
-	tape_action: 3 pointers to single elements
-
-	tape_actions: array of tape_action with k length
-
 
 - forking of turing machine? - COW tape (only cell copy)
 - better distinction between data and state of tm?
@@ -102,6 +76,7 @@ brillant idea:
 - tape_new_empty() should be possible!!!
 - several tapes - not working - read as vector and not as distinct tokens!
 - beautify includes
+- usr pointer in some structs?
 
 grammar interpreter/parser on the base of this tm-project
 manowar generator on the base of this tm-project
@@ -121,16 +96,9 @@ general parser for cool stuff like own xml
  *		exampel_list_del_node(example_list *this, ...)
  *	8) Array-Classes: Array-Class of example is: examples with members "data" and "length"
  *	9) EVERY Class has a structname_free method!!!
+ */
 
-never only one underscore
-
-user pointer in edge, state, or tm?
-
-advantages of list_classes:
-	- list container type
-		=> size member
-	- strict difference between entry and list
-	- ID HANDLING IN LIST IS INDEPENDET FROM STATE CREATION
+/**
  *
  *	NFA: TuringMachine with one (read-only) tape. Only valid direction is
  *	LEFT and computation stops when end of tape is reached or first blank

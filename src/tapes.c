@@ -124,6 +124,13 @@ bool tapes_apply_actions(tapes *this, tape_actions *actions)
 {
 	unsigned int i = 0;
 
+	if (!this) {
+		erring_add(E_NULL);
+		return false;
+	}
+	if (!actions)
+		return true;
+
 	if (!actions->vec_read)
 		goto WRITE;
 

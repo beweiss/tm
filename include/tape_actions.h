@@ -6,18 +6,25 @@
 
 /**
  * \struct tape_actions
- * \brief "Array Class" of #tape_action
+ * \brief Contains all actions linked to a transition
  *
- * \var tape_actions::actions
- * Array of #tape_action objects
+ * Why an Array of Pointers? Because to "establish a new level" to
+ * distinguish between the value of the token and the "absence of a token".
+ * see #tapes_apply_actions to see how the values are evaluated
+ *
+ * \var tape_actions::vec_read
+ * Array of uintptr_t Pointers ("read vector")
+ * \var tape_actions::vec_write
+ * Array of uintptr_t Pointers ("write vector")
+ * \var tape_actions::vec_dirs
+ * Array of SHIFT_DIR enums ("direction vector")
  * \var tape_actions::length
- * Length of the array
+ * Length of all three arrays
  */
 typedef struct {
 	uintptr_t **vec_read;
 	uintptr_t **vec_write;
 	SHIFT_DIR *vec_dirs;
-	//length of each of the three members above == number of tapes
 	unsigned int length;
 } tape_actions;
 

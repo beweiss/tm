@@ -7,7 +7,10 @@
 
 /**
  * \struct tapes
- * \brief Represents the "Array Class" of #tape
+ * \brief Represents the "Array struct" of #tape
+ *
+ * Every #tape_actions is performed on all tapes so a single tape may
+ * not be manipulated otherwise.
  *
  * \var tapes::tapes
  * Array of #tape objects

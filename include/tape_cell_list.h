@@ -6,17 +6,22 @@
 
 /**
  * \struct tape_cell_list
- * \brief Represents the "List Class" of #tape_cell
+ * \brief Represents the "List struct" of #tape_cell
  *
  * Internal representation of a tape of a Turing Machine.
- * We use a doubly-linked-list for this because a tape in a Turing Machine
- * is often changed (new tokens) and both directions (left/prev and right/next)
- * are allowed. So a doubly-linked-list should be perfect for this.
- * FIXME NAMING CONVENTION!!!!
- * NO RING - JUST DOUBLY LINKED LIST
+ * We use a doubly linked list for this because a tape in a Turing Machine
+ * is often changed (new tokens) and we must be able to move in any direction
+ * on the tape (see #SHIFT_DIR)
+ * Please be aware of the fact that this is a "doubly linked list" and not
+ * a "ring" - the prev pointer of the head is always NULL and the next pointer
+ * of the last element is also NULL.
+ * This is useful to determine "end" an "start" of the tape so we can
+ * automatically expand the list if the user moves to NULL.
  *
  * \var tape_cell_list::head
  * Head of the list
+ * \var tape_cell_list::tail
+ * Tail of the list
  * \var tape_cell_list::size
  * Size of the list
  */

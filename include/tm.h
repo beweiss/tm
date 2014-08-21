@@ -8,83 +8,65 @@
 #include <tm/constants.h>
 #include <tm/word.h>
 
-typedef struct {
-	state *state_cur; //shallow copy on tm_cur_state_copy()
-	tapes *tapes_cur; //deep copy on tm_cur_state_copy()
-} tm_cur_state;
-
 /**
-tm_cur_state *tm_get_current_state(tm *this) - return pointer to tm_cur_state struct
-static inline int *__tm_compute_step(tm *this); - touches only tm_cur_state
-int tm_compute_step(tm *this) {
-	__tm_compute_step(this);
-}
-int tm_compute(tm *this) { call __tm_compute_step() until we reached accepting or
-			   rejecting state
-}
-
-tm_cur_state *tm_simulate_compute(tm *this)
-{
-	tm_cur_state *save = tm_cur_state_copy(this->current);
-	tm_cur_state *ret = this->current;
-
-	tm_compute(this);
-
-	this->current = save;
-
-	return ret;
-}
-
-//for this we need an internal list...
-
-struct tape_actions_list
-tm_compute_step_reverse(tm *this) - recovers the last transition...
-
-
-//FIXME also mention the "More than one tape"-story in this documentation...
-TODO IMPLEMENT:
-
-		void tape_apply_action(tape *this, tape_action *action);
- FIXME current dummy edges....to reject
-
-*/
+ * \brief Represent the current state of a #tm
+ * \var tm_cur_state::state_cur
+ * Pointer to the current state (set by the compute functions)
+ * \var tm_cur_state::tapes_cur
+ * Pointer to the current state of the tapes and perform COW
+ * if change is detected
+ */
+typedef struct {
+	state *state_cur;
+	tapes *tapes_cur;
+} tm_cur_state;
 
 
 /**
  * \struct tm
  * \brief Represents the Turing Machine
  *
+ * FIXME: adjust this definition to the definition of a tm with multiple tapes
+ *
  * Turing machine is defined as a 8-tuple \f$M = (Q, A_i, A_t, b, \delta, q_0, F_a, F_r)\f$
- * -\f$Q\f$ is a finite, non-empty set of states (tm::states)
- * -\f$A_i\f$ (Alphabet Input) is a finite, non-empty set of the input alphabet/symbols
+ * -\f$Q\f$ is a finite, non-empty set of states
+ * 	+ Implementation: tm::states
+ * -\f$A_i\f$ is a finite, non-empty set of the input alphabet/symbols
  * 	+ it (has to be) is a strict subset of the tape alphabet \f$A_t\f$
  * 	+ It contains _all_ symbols which are allowed as the very first initiate
- * 	word on the first tape! (it may not contain the blank symbol!)
- * 	+ tm::alph_input
- * - \f$At\f$ (Alphabet Tape) is a finite, non-empty set of symbols
+ * 	  word on the first tape! (it may not contain the blank symbol!)
+ * 	+ Implementation: None. This is user defined.
+ * - \f$A_t\f$ is a finite, non-empty set of symbols
  * 	+ It determines all allowed symbols on the tape! (input and output)
  * 	+ It has to be a strict superset of \f$A_i\f$
- * 	+ tm::alph_tape
- * - \f$b\f$ is the blank symbol (the only symbol allowed to occur on the tape
- * 	+ infinitely often at any step during the computation)
- * 	+ #BLANK
+ * 	  because \f$b \in A_t\f$ and \f$b \ni A_i\f$
+ * 	+ Implementation: None. This is user defined.
+ * - \f$b\f$ is the blank symbol
+ * 	+ the only symbol allowed to occur on the tape infinitely often at
+ * 	  any step during the computation
+ * 	+ Implementation: Fixed Value #BLANK
  * - \f$\delta: Q \setminus (F_a \cup F_r) \times A_t \rightarrow Q \times A_t \times \{L,S,R\}\f$
  * 	+ is a partial function called the transition function
+ * 	+ Implementation: #tape_actions in each #edge
  * - \f$q_0 \in Q\f$ is the initial state
- * 	+ Always first #state in tm::states
+ * 	+ The start of the computation
+ * 	+ Implementaion: By default the first #state in tm::states is used
+ * 	  for this but it can also be defined by the user
  * - \f$F_a \subseteq Q\f$ is the set of final or accepting states.
- * 	+ Coded in state::type
+ * 	+ If one of these states is reached the computation ends successfully
+ * 	  => the input word is accepted by the Turing Machine
+ * 	+ Implementation: Only *one* accepting state
  * - \f$F_r \subseteq Q\f$ is the set of final or rejecting states.
- *	+ Coded in state::type
+ * 	+ If one of these states is reached the computation ends unsuccessfully
+ * 	  => the input word is rejected by the Turing Machine
+ * 	+ Implementation: Only *one* rejecting state
  *
  * \var tm::states
  * The list of states
  * \var tm::tapes
- * An array of #tape objects
- * \var tm::alph_input
- * Is the "Input Alphabet" of the Turing Machine
- * \var tm::alph_tape
- * Is the "Tape Alphabet" of the Turing Machine
+ * The tapes of the tm
+ * \var tm::current
+ * The current state of the tm
  */
 typedef struct {
 	state_list *states;

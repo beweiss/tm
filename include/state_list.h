@@ -7,7 +7,7 @@
  * \struct state_list
  * \brief Represents an list of states (#state) of the #tm
  *
- * This is the "List Class" of #state so here are only list functions.
+ * This is the "List struct" of #state so here are only list functions.
  *
  * \var state_list::head
  * Head of the list

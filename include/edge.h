@@ -27,7 +27,7 @@ typedef struct edge edge;
  */
 struct edge {
 	state *target;
-	bool accept_reject; //if true then accept else reject
+	bool accept_reject;
 	tape_actions *actions;
 	edge *next;
 };

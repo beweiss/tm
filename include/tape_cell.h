@@ -5,7 +5,9 @@
 
 /**
  * \struct tape_cell
- * \brief Represents the "Node/Entry Class" of #tape_cell_list
+ * \brief Represents the "Node/Entry struct" of #tape_cell_list
+ *
+ * Internal representation of a tape cell of a tape of a Turing Machine.
  *
  * \var tape_cell::token
  * Token in tape_cell list

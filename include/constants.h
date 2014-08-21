@@ -1,6 +1,7 @@
 #ifndef CONSTANTS_H_
 #define CONSTANTS_H_
 
+/*! The blank Symbol */
 #define BLANK 0
 
 /*! This enum contains the possible shift directions on a tape */

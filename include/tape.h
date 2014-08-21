@@ -11,8 +11,6 @@
  * \struct tape
  * \brief Represents an tape of the #tm
  *
- * \var tape::priv
- * Determines the read/write privileges
  * \var tape::start
  * Determines the start of the tape
  * \var tape::pos

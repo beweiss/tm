@@ -3,14 +3,19 @@
 
 #include <stdint.h>
 
-/**
- * \typedef typedef #alphabet #word
- * \brief Represents an word
- *
- */
-
 typedef struct word word;
 
+/**
+ * \struct word
+ * \brief Represents a word
+ *
+ * This data structure is used to "summarize" a tuple of tokens
+ *
+ * \var word::letters
+ * The "letters" of the word. An array of tokens
+ * \var word::length
+ * The length of the array
+ */
 struct word {
 	uintptr_t *letters;
 	unsigned int length;

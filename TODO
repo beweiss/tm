@@ -1,1 +1,18 @@
 - adjust definition of the tm to the definition of a tm with multiple tapes
+
+- removed state_list and edge_list
+- added states and edges
+- made specification of number of states mandatory
+  made old tm_new static (__tm_new) and new tm_new is old tm_new_with_states
+- added documentation
+- removed state::out_default
+
+- average number of edges...
+
+
+- order on edges - not states => maybe edge_list
+  First sort due to number of NULL entries in read vector
+  if entire read vector is NULL then place this at the end
+  Second sort due to number of NULL entries in write vector
+  if entire write vector is NULL then place this at the end of
+  dir-NULLS

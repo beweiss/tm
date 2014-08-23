@@ -1,8 +1,9 @@
 #define _GNU_SOURCE
+#define __USE_GNU
 #include <stdio.h>
 #include <stdlib.h>
-#include <error.h>
 #include <errno.h>
+#include <error.h>
 #include <stdarg.h>
 #include "tm/erring.h"
 

@@ -8,7 +8,7 @@ RM		 = rm -f
 STRIP		 = strip
 
 CFLAGS		+= -Wall -ggdb
-CPPFLAGS	+= -I$(TREE)/include
+CPPFLAGS	+= -idirafter $(TREE)/include
 LDFLAGS		+= -ggdb
 
 TREE		:= $(CURDIR)
